@@ -1,0 +1,29 @@
+{
+  "name": "banners",
+  "version": "1.0.0",
+  "description": "banner",
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "browser-sync": "^2.11.1",
+    "del": "^2.2.0",
+    "gulp": "git://github.com/gulpjs/gulp.git#4.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-connect": "^5.0.0",
+    "gulp-data": "^1.2.1",
+    "gulp-eslint": "^3.0.1",
+    "gulp-flatten": "^0.3.1",
+    "gulp-if": "^2.0.0",
+    "gulp-include": "^2.1.0",
+    "gulp-jade": "^1.1.0",
+    "gulp-less": "^3.0.5",
+    "gulp-notify": "^2.2.0",
+    "gulp-pug": "^3.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.6.0"
+  },
+  "scripts": {
+    "start": "gulp dev"
+  },
+  "author": "stasizon"
+}
