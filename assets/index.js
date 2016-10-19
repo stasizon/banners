@@ -1,5 +1,4 @@
-document.getElementsByClassName('gallery')[0].style.left = 0;
-var currentSlide = document.getElementsByClassName('gallery__item--current')[0];
+var slider = document.getElementById('slider');
 
 (function setRate() {
 
@@ -22,96 +21,89 @@ var currentSlide = document.getElementsByClassName('gallery__item--current')[0];
 
 })();
 
-function galerySlide(side) {
+(function galerySlide() {
 
-    var gallery = document.getElementsByClassName('gallery')[0];
+    var firstClick;
+    var lastClick;
 
-    if (side === 'left') {
+    function swipe(e) {
 
-        gallery.style.left = parseFloat(gallery.style.left) - 250 + 'px';
+        slider.style.left = -(firstClick - e.clientX) + 'px';
 
-        currentSlide = currentSlide.nextSibling.nextSibling;
+        function rotateSlide(distance) {
 
-        currentSlide.style.transform = 'rotate3d(0, 1, 0, 0deg)';
+            var deg = -distance / 5;
 
-        if (currentSlide.previousSibling.previousSibling) {
-
-            currentSlide.previousSibling.previousSibling.style.transform = 'rotate3d(0, 1, 0, 40deg)';
-
-        }
-
-        if (currentSlide.nextSibling.nextSibling) {
-
-            currentSlide.nextSibling.nextSibling.style.transform = 'rotate3d(0, 1, 0, -40deg)';
-
-        }
-
-    } else {
-
-        gallery.style.left = parseFloat(gallery.style.left) + 250 + 'px';
-
-        if (currentSlide !== null) {
-
-            currentSlide = currentSlide.previousSibling.previousSibling;
-
-        }
-
-        if (currentSlide) {
-
-            currentSlide.style.transform = 'rotate3d(0, 1, 0, 0deg)';
-
-        }
-
-        if (currentSlide !== null && currentSlide.previousSibling.previousSibling !== null) {
-
-            currentSlide.previousSibling.previousSibling.style.transform = 'rotate3d(0, 1, 0, 40deg)';
-
-        }
-
-        if (currentSlide !== null && currentSlide.nextSibling.nextSibling !== null) {
-
-            currentSlide.nextSibling.nextSibling.style.transform = 'rotate3d(0, 1, 0, -40deg)';
-
-        }
-
-    }
-
-}
-
-(function gallerySwipe() {
-
-    var xDown = null;
-    var yDown = null;
-
-    function handleTouchStart(evt) {
-        xDown = evt.touches[0].clientX;
-        yDown = evt.touches[0].clientY;
-    }
-
-    function handleTouchMove(evt) {
-        if ( ! xDown || ! yDown ) {
-            return;
-        }
-
-        var xUp = evt.touches[0].clientX;
-        var yUp = evt.touches[0].clientY;
-
-        var xDiff = xDown - xUp;
-        var yDiff = yDown - yUp;
-
-        if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
-            if ( xDiff > 0 ) {
-                galerySlide('left');
-            } else {
-                galerySlide('right');
+            if (deg > -40 && deg < 40) {
+                return deg;
             }
+
         }
-        /* reset values */
-        xDown = null;
-        yDown = null;
+
+        for (var i = 0; i < slider.children.length; i++) {
+            slider.children[i].style.transform = 'rotateY(' + rotateSlide(parseFloat(slider.style.left) - 125 + (250* i)) + 'deg)';
+        }
+
     }
 
-    document.addEventListener('touchstart', handleTouchStart, false);
-    document.addEventListener('touchmove', handleTouchMove, false);
+    function toFixedPosition() {
+
+        var nearSlide = function() {
+
+            var slideCoordinat = slider.children[0];
+
+        }
+
+        // if (-parseFloat(slider.style.left) < 0) {
+        //     slider.style.left = 120 + 'px';
+        //
+        //     lastClick = lastClick - 120;
+        //
+        //     slider.children[1].style.transform = 'rotateY(-40deg)';
+        // }
+
+    }
+
+    function mousedown(e) {
+
+        slider.style.cursor = 'move';
+
+        if (lastClick) {
+            firstClick = e.clientX - lastClick;
+        } else {
+            firstClick = e.clientX;
+        }
+
+        slider.addEventListener('mousemove', swipe);
+
+    }
+
+    function mouseup(e) {
+
+        slider.style.cursor = 'pointer';
+
+        lastClick = -(firstClick - e.clientX);
+
+        slider.removeEventListener('mousemove', swipe);
+
+        toFixedPosition();
+
+    }
+
+    function mouseleave(e) {
+
+        slider.style.cursor = 'pointer';
+
+        lastClick = -(firstClick - e.clientX);
+
+        slider.removeEventListener('mousemove', swipe);
+
+        toFixedPosition();
+
+    }
+
+    slider.addEventListener('mousedown', mousedown);
+    slider.addEventListener('mouseup', mouseup);
+    slider.addEventListener('mouseleave', mouseleave);
 
 })();

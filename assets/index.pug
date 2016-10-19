@@ -6,35 +6,42 @@ html
 
         title Banner
         //- link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
-        link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto")
+        //- link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto")
         link(rel="stylesheet" href="./index.css")
+
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
 
     body
 
-        .decorative
+        #debug
 
-            .banner
+        .banner#banner
 
-                header.banner__header
+            header.banner__header
 
-                    .banner__logo
+                .banner__logo
 
-                    .banner__title
+                .banner__title
 
-                        h1.banner__title-text Banner title
+                    h1.banner__title-text Banner title
 
-                        .rate.banner__rate.row(data-rate="4")
+                    .rate.banner__rate.row(data-rate="4")
 
-                        h2.banner__headline Banner headline
+                    h2.banner__headline Banner headline
 
-                        p.banner__description Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    p.banner__description Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 
-                .gallery.banner__gallery
+            .gallery
 
-                    .gallery__item.gallery__item--left
-                    .gallery__item.gallery__item--current
-                    .gallery__item.gallery__item--right
+                #slider.banner__gallery
 
-                .gallery__controller
+                    .gallery__item
+                    .gallery__item
+                    .gallery__item
+                    .gallery__item
+                    .gallery__item
+                    .gallery__item
+
+            .gallery__controller
 
         script(src="index.js")
