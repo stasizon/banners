@@ -26,6 +26,16 @@ var slider = document.getElementById('slider');
     var firstClick;
     var lastClick;
 
+    (function setFirstRotate() {
+
+        for (var i = 1; i < slider.children.length; i++) {
+            slider.children[i].style.transform = 'rotateY(-40deg)';
+        }
+
+        console.log(slider.children[2].style.transform);
+
+    })();
+
     function swipe(e) {
 
         slider.style.left = -(firstClick - e.clientX) + 'px';
