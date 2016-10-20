@@ -1,4 +1,5 @@
 var slider = document.getElementById('slider');
+    slider.style.left = '125px';
 
 (function setRate() {
 
@@ -32,8 +33,6 @@ var slider = document.getElementById('slider');
             slider.children[i].style.transform = 'rotateY(-40deg)';
         }
 
-        console.log(slider.children[2].style.transform);
-
     })();
 
     function swipe(e) {
@@ -58,19 +57,45 @@ var slider = document.getElementById('slider');
 
     function toFixedPosition() {
 
-        var nearSlide = function() {
+        (function nearSlide(distance) {
 
-            var slideCoordinat = slider.children[0];
+            function getBreakPoints() {
 
-        }
+                var points = [];
 
-        // if (-parseFloat(slider.style.left) < 0) {
-        //     slider.style.left = 120 + 'px';
-        //
-        //     lastClick = lastClick - 120;
-        //
-        //     slider.children[1].style.transform = 'rotateY(-40deg)';
-        // }
+                for (var i = 0; i < slider.children.length; i++) {
+                    points[i] = i * 250;
+                }
+
+                return points;
+
+            }
+
+            var breakpoints = getBreakPoints();
+
+            if (distance <= breakpoints[0]) {
+                slider.style.left = (breakpoints[1] / 2) + 'px';
+                slider.children[0].style.transform = 'rotateY(0deg)';
+            }
+
+            for (var i = 0; i < breakpoints.length; i++) {
+
+                if (distance >= breakpoints[i] && distance <= breakpoints[i+1]) {
+                    slider.style.left = -(breakpoints[i + 1]  - 125) + 'px';
+
+                    slider.style.transition = 'all 0.5s';
+                    slider.children[i + 1].style.transform = 'rotateY(0deg)';
+
+
+                    setTimeout(function() {
+                        slider.style.transition = 'none';
+                    }, 500);
+
+                }
+
+            }
+
+        })(-parseFloat(slider.style.left));
 
     }
 
