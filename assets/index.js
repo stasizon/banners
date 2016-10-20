@@ -1,5 +1,5 @@
 var slider = document.getElementById('slider');
-    slider.style.left = '125px';
+    slider.style.left = '-375px';
 
 (function setRate() {
 
@@ -74,25 +74,55 @@ var slider = document.getElementById('slider');
             var breakpoints = getBreakPoints();
 
             if (distance <= breakpoints[0]) {
+                slider.style.transition = 'all 0.5s';
                 slider.style.left = (breakpoints[1] / 2) + 'px';
                 slider.children[0].style.transform = 'rotateY(0deg)';
+
+                setTimeout(function() {
+                    slider.style.transition = 'none';
+                }, 500);
+
+                lastClick = breakpoints[1] / 2;
             }
+
+            console.log(distance, breakpoints[breakpoints.length - 1]);
 
             for (var i = 0; i < breakpoints.length; i++) {
 
-                if (distance >= breakpoints[i] && distance <= breakpoints[i+1]) {
+                if (distance >= breakpoints[i] && distance <= breakpoints[i+1] && breakpoints[i+2]) {
+
                     slider.style.left = -(breakpoints[i + 1]  - 125) + 'px';
 
                     slider.style.transition = 'all 0.5s';
+                    slider.children[i].style.transition = 'all 0.5s';
+                    slider.children[i].style.transform = 'rotateY(40deg)';
                     slider.children[i + 1].style.transform = 'rotateY(0deg)';
+                    slider.children[i + 2].style.transform = 'rotateY(-40deg)';
 
+                    lastClick = -(breakpoints[i + 1]  - 125);
 
                     setTimeout(function() {
+                        console.log(slider.children[i-1]);
                         slider.style.transition = 'none';
+                        slider.children[i-1].style.transition = 'none';
                     }, 500);
 
                 }
 
+            }
+
+            if (distance >= breakpoints[breakpoints.length - 1]) {
+
+                slider.style.transition = 'all 0.5s';
+
+                slider.style.left = -1125 + 'px';
+                slider.children[0].style.transform = 'rotateY(0deg)';
+
+                setTimeout(function() {
+                    slider.style.transition = 'none';
+                }, 500);
+
+                lastClick = breakpoints[breakpoints.length - 1] - 125;
             }
 
         })(-parseFloat(slider.style.left));
