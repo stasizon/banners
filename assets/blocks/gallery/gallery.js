@@ -1,9 +1,17 @@
-function initGallery() {
+function initGallery(slides) {
 
     var initDisplace = -375;
 
     var slider = document.getElementById('slider');
         slider.style.left = initDisplace + 'px';
+
+    for (var i = 0; i < slides.length; i++) {
+        var slide = document.createElement('div');
+        slide.classList.add('gallery__item');
+        slide.style.background = 'url(' + slides[i] + ') no-repeat center / cover';
+
+        slider.appendChild(slide);
+    }
 
     var firstClick;
     var lastClick = initDisplace;
@@ -24,7 +32,9 @@ function initGallery() {
 
     function swipe(e) {
 
-        slider.style.left = -(firstClick - e.clientX) + 'px';
+        slider.style.left = -(firstClick - (e.clientX || e.touches.clientX)) + 'px';
+
+        console.log(e.clientX || e.touches.clientX);
 
         function rotateSlide(distance) {
 
@@ -140,6 +150,7 @@ function initGallery() {
         }
 
         slider.addEventListener('mousemove', swipe);
+        slider.addEventListener('touchmove', swipe);
 
     }
 
@@ -150,6 +161,7 @@ function initGallery() {
         lastClick = -(firstClick - e.clientX);
 
         slider.removeEventListener('mousemove', swipe);
+        slider.removeEventListener('touchmove', swipe);
 
         toFixedPosition();
 
@@ -170,6 +182,14 @@ function initGallery() {
     slider.addEventListener('mousedown', mousedown);
     slider.addEventListener('mouseup', mouseup);
     slider.addEventListener('mouseleave', mouseleave);
+
+    slider.addEventListener('touchstart', mousedown);
+    slider.addEventListener('touchend', mouseup);
+    slider.addEventListener('touchmove', swipe);
+
+    function test(e) {
+        console.log(e);
+    }
 
 
 }
