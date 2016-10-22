@@ -90,10 +90,12 @@ function initGallery(slides) {
         if (distance <= breakpoints[0]) {
             slider.style.transition = 'all 0.5s';
             slider.style.left = (breakpoints[1] / 2) + 'px';
-            slider.children[0].style.transform = 'rotateY(0deg)';
+            slider.children[0].style.transition = 'all 0.5s';
+            slider.children[0].style.transform = 'translateZ(80px) rotateY(0deg)';
 
             setTimeout(function() {
                 slider.style.transition = 'none';
+                slider.children[0].style.transition = 'none';
             }, 500);
 
             lastClick = breakpoints[1] / 2;
@@ -133,7 +135,7 @@ function initGallery(slides) {
             slider.style.transition = 'all 0.5s';
 
             slider.style.left = -1125 + 'px';
-            slider.children[0].style.transform = 'rotateY(0deg)';
+            slider.children[0].style.transform = 'translateZ(80px) rotateY(0deg)';
 
             setTimeout(function() {
                 slider.style.transition = 'none';
