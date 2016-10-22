@@ -110,13 +110,20 @@ function initGallery(slides) {
                 slider.style.transition = 'all 0.5s';
                 slider.children[i].style.transform = 'rotateY(40deg)';
                 slider.children[i + 1].style.transform = 'rotateY(0deg)';
+                slider.children[i + 1].style.transition = 'all 0.5s';
                 slider.children[i + 1].style.transform = 'translateZ(80px)';
                 slider.children[i + 2].style.transform = 'rotateY(-40deg)';
 
                 lastClick = -(breakpoints[i + 1]  - 125);
 
                 setTimeout(function() {
+                    
                     slider.style.transition = 'none';
+
+                    for (var i = 0; i < slider.children.length; i++) {
+                        slider.children[i].style.transition = 'none';
+                    }
+
                 }, 500);
 
             }
