@@ -42,13 +42,13 @@ function initGallery() {
 
                 if (distance > 0) {
                     distance = -distance;
-                } else {
-                    distance = 0;
                 }
 
 
                 return distance + 80
             }
+
+            return 0;
 
 
         }
@@ -57,8 +57,6 @@ function initGallery() {
             slider.children[i].style.transform =
             'rotateY(' + rotateSlide(parseFloat(slider.style.left) - 125 + (250 * i)) + 'deg)' +
             'translateZ(' + scaleSlide(parseFloat(slider.style.left) - 125 + (250 * i)) + 'px)';
-
-            console.log(slider.children[i].style.transform);
         }
 
     }
