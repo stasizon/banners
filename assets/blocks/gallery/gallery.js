@@ -9,6 +9,7 @@ function initGallery(slides) {
         var slide = document.createElement('div');
         slide.classList.add('gallery__item');
         slide.style.background = 'url(' + slides[i] + ') no-repeat center / cover';
+        slide.style.zIndex = slides.length - i;
 
         slider.appendChild(slide);
     }
@@ -26,6 +27,11 @@ function initGallery(slides) {
 
         for (var y = slider.children.length / 2; y < slider.children.length; y++) {
             slider.children[y].style.transform = 'rotateY(-40deg) translateZ(-80px)';
+        }
+
+        for (var z = 0; z < slider.children.length; z++) {
+            slider.children[z].style.left = -50 * z;
+            console.log(slider.children[z].style.left);
         }
 
     })();
@@ -63,8 +69,8 @@ function initGallery(slides) {
 
         for (var i = 0; i < slider.children.length; i++) {
             slider.children[i].style.transform =
-            'rotateY(' + rotateSlide(parseFloat(slider.style.left) - 125 + (250 * i)) + 'deg)' +
-            'translateZ(' + scaleSlide(parseFloat(slider.style.left) - 125 + (250 * i)) + 'px)';
+            'rotateY(' + rotateSlide(parseFloat(slider.style.left) - 125 + (200 * i)) + 'deg)' +
+            'translateZ(' + scaleSlide(parseFloat(slider.style.left) - 125 + (200 * i)) + 'px)';
         }
 
         console.log(slider.children[2].style.transform);
@@ -80,7 +86,7 @@ function initGallery(slides) {
             var points = [];
 
             for (var i = 0; i < slider.children.length; i++) {
-                points[i] = i * 250;
+                points[i] = i * 200;
             }
 
             return points;
@@ -112,31 +118,34 @@ function initGallery(slides) {
                 slider.style.transition = 'all 0.5s';
                 slider.children[i].style.transform = 'rotateY(40deg) translateZ(-80px)';
                 slider.children[i + 1].style.transform = 'rotateY(0deg) translateZ(80px)';
-                slider.children[i + 1].style.transition = 'all 0.5s';
                 slider.children[i + 2].style.transform = 'rotateY(-40deg) translateZ(-80px)';
 
                 lastClick = -(breakpoints[i + 1]  - 125);
-
-                setTimeout(function() {
-
-                    slider.style.transition = 'none';
-
-                    for (var i = 0; i < slider.children.length; i++) {
-                        slider.children[i].style.transition = 'none';
-                    }
-
-                }, 500);
 
             }
 
         }
 
+        for (var t = 0; t < slider.children.length; t++) {
+            slider.children[t].style.transition = 'all 0.5s';
+        }
+
+        setTimeout(function() {
+
+            slider.style.transition = 'none';
+
+            for (var i = 0; i < slider.children.length; i++) {
+                slider.children[i].style.transition = 'none';
+            }
+
+        }, 500);
+
         if (distance >= breakpoints[breakpoints.length - 2]) {
 
             slider.style.transition = 'all 0.5s';
 
-            slider.style.left = -1125 + 'px';
-            slider.children[0].style.transform = 'translateZ(80px) rotateY(0deg)';
+            slider.style.left = -910 + 'px';
+            slider.children[slider.children.length - 1].style.transform = 'translateZ(80px) rotateY(0deg)';
 
             setTimeout(function() {
                 slider.style.transition = 'none';
