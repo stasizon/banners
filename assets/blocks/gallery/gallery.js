@@ -21,18 +21,18 @@ function initGallery(slides) {
         toFixedPosition();
 
         for (var i = 0; i < slider.children.length / 2 - 1; i++) {
-            slider.children[i].style.transform = 'rotateY(40deg)';
+            slider.children[i].style.transform = 'rotateY(40deg) translateZ(-80px)';
         }
 
         for (var y = slider.children.length / 2; y < slider.children.length; y++) {
-            slider.children[y].style.transform = 'rotateY(-40deg)';
+            slider.children[y].style.transform = 'rotateY(-40deg) translateZ(-80px)';
         }
 
     })();
 
     function swipe(e) {
 
-        slider.style.left = -(firstClick - (e.clientX || e.touches[0].clientX)) + 'px';
+        slider.style.left = -(firstClick - (e.clientX || e.touches.clientX)) + 'px';
 
         function rotateSlide(distance) {
 
@@ -46,7 +46,7 @@ function initGallery(slides) {
 
         function scaleSlide(distance) {
 
-            if (distance > -80 && distance < 80) {
+            if (distance > -160 && distance < 160) {
 
                 if (distance > 0) {
                     distance = -distance;
@@ -56,7 +56,7 @@ function initGallery(slides) {
                 return distance + 80
             }
 
-            return 0;
+            return -80;
 
 
         }
@@ -66,6 +66,8 @@ function initGallery(slides) {
             'rotateY(' + rotateSlide(parseFloat(slider.style.left) - 125 + (250 * i)) + 'deg)' +
             'translateZ(' + scaleSlide(parseFloat(slider.style.left) - 125 + (250 * i)) + 'px)';
         }
+
+        console.log(slider.children[2].style.transform);
 
     }
 
@@ -108,11 +110,10 @@ function initGallery(slides) {
                 slider.style.left = -(breakpoints[i + 1]  - 125) + 'px';
 
                 slider.style.transition = 'all 0.5s';
-                slider.children[i].style.transform = 'rotateY(40deg)';
-                slider.children[i + 1].style.transform = 'rotateY(0deg)';
+                slider.children[i].style.transform = 'rotateY(40deg) translateZ(-80px)';
+                slider.children[i + 1].style.transform = 'rotateY(0deg) translateZ(80px)';
                 slider.children[i + 1].style.transition = 'all 0.5s';
-                slider.children[i + 1].style.transform = 'translateZ(80px)';
-                slider.children[i + 2].style.transform = 'rotateY(-40deg)';
+                slider.children[i + 2].style.transform = 'rotateY(-40deg) translateZ(-80px)';
 
                 lastClick = -(breakpoints[i + 1]  - 125);
 
@@ -149,9 +150,9 @@ function initGallery(slides) {
         slider.style.cursor = 'move';
 
         if (lastClick) {
-            firstClick = (e.clientX || e.touches[0].clientX) - lastClick;
+            firstClick = e.clientX - lastClick;
         } else {
-            firstClick = e.clientX || e.touches[0].clientX;
+            firstClick = e.clientX;
         }
 
         slider.addEventListener('mousemove', swipe);
@@ -174,7 +175,7 @@ function initGallery(slides) {
 
         slider.style.cursor = 'pointer';
 
-        lastClick = -(firstClick - (e.clientX || e.touches[0].clientX));
+        lastClick = -(firstClick - e.clientX);
 
         slider.removeEventListener('mousemove', swipe);
 
