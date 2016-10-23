@@ -2,12 +2,12 @@
 //=require blocks/gallery/gallery.js
 
 var imageArray = [
-                  'https://unsplash.it/270/173',
-                  'https://unsplash.it/270/172',
-                  'https://unsplash.it/270/171',
-                  'https://unsplash.it/270/170',
-                  'https://unsplash.it/270/169',
-                  'https://unsplash.it/270/168'
+                  './img/unsplash.jpg',
+                  './img/unsplash-2.jpg',
+                  './img/unsplash-3.jpg',
+                  './img/unsplash-4.jpg',
+                  './img/unsplash-5.jpg',
+                  './img/unsplash-6.jpg'
                  ];
 
 setRate();
