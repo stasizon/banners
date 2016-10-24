@@ -14,31 +14,15 @@ function initGallery(slides) {
         slider.appendChild(slide);
     }
 
-    var firstClick;
-    var lastClick = initDisplace;
+    var firstClickPosition;
+    var lastClickPosition = initDisplace;
 
-    (function setFirstRotate() {
 
-        toFixedPosition();
-
-        for (var i = 0; i < slider.children.length / 2 - 1; i++) {
-            slider.children[i].style.transform = 'rotateY(40deg) translateZ(-80px)';
-        }
-
-        for (var y = slider.children.length / 2; y < slider.children.length; y++) {
-            slider.children[y].style.transform = 'rotateY(-40deg) translateZ(-80px)';
-        }
-
-        for (var z = 0; z < slider.children.length; z++) {
-            slider.children[z].style.left = -50 * z;
-            console.log(slider.children[z].style.left);
-        }
-
-    })();
+    toFixedPosition();
 
     function swipe(e) {
 
-        slider.style.left = -(firstClick - (e.clientX || e.touches.clientX)) + 'px';
+        slider.style.left = -(firstClickPosition - (e.clientX || e.touches.clientX)) + 'px';
 
         function rotateSlide(distance) {
 
@@ -73,8 +57,6 @@ function initGallery(slides) {
             'translateZ(' + scaleSlide(parseFloat(slider.style.left) - 125 + (200 * i)) + 'px)';
         }
 
-        console.log(slider.children[2].style.transform);
-
     }
 
     function toFixedPosition() {
@@ -106,7 +88,7 @@ function initGallery(slides) {
                 slider.children[0].style.transition = 'none';
             }, 500);
 
-            lastClick = breakpoints[1] / 2;
+            lastClickPosition = breakpoints[1] / 2;
         }
 
         for (var i = 0; i < breakpoints.length; i++) {
@@ -120,7 +102,7 @@ function initGallery(slides) {
                 slider.children[i + 1].style.transform = 'rotateY(0deg) translateZ(80px)';
                 slider.children[i + 2].style.transform = 'rotateY(-40deg) translateZ(-80px)';
 
-                lastClick = -(breakpoints[i + 1]  - 125);
+                lastClickPosition = -(breakpoints[i + 1]  - 125);
 
             }
 
@@ -158,10 +140,10 @@ function initGallery(slides) {
 
         slider.style.cursor = 'move';
 
-        if (lastClick) {
-            firstClick = e.clientX - lastClick;
+        if (lastClickPosition) {
+            firstClickPosition = e.clientX - lastClickPosition;
         } else {
-            firstClick = e.clientX;
+            firstClickPosition = e.clientX;
         }
 
         slider.addEventListener('mousemove', swipe);
@@ -172,7 +154,7 @@ function initGallery(slides) {
 
         slider.style.cursor = 'pointer';
 
-        lastClick = -(firstClick - e.clientX);
+        lastClickPosition = -(firstClickPosition - e.clientX);
 
         slider.removeEventListener('mousemove', swipe);
 
@@ -184,7 +166,7 @@ function initGallery(slides) {
 
         slider.style.cursor = 'pointer';
 
-        lastClick = -(firstClick - e.clientX);
+        lastClickPosition = -(firstClickPosition - e.clientX);
 
         slider.removeEventListener('mousemove', swipe);
 
