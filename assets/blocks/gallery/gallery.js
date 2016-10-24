@@ -77,10 +77,16 @@ function initGallery(slides) {
 
         function calculateSlideLayer(distance) {
 
-            var zIndex = 400 - distance;
-            // console.log(distance);
+            var depth = 400;
+
+            var zIndex = -distance + depth / 2;
+
+            if (zIndex > depth / 2) {
+                return depth - zIndex;
+            }
 
             return zIndex;
+
         }
 
         for (var i = 0; i < slider.children.length; i++) {
@@ -94,8 +100,8 @@ function initGallery(slides) {
         }
 
         // slider.children[1].style.zIndex = calculateSlideLayer(calculateDistance(1));
-
-        console.log(slider.children[1].style.zIndex);
+        //
+        // console.log(slider.children[1].style.zIndex);
 
     }
 
