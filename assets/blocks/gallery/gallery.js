@@ -29,17 +29,19 @@ function initGallery(slides) {
     var firstClickPosition;
     var lastClickPosition = initDisplace;
 
-    calculateTransform({clientX: initDisplace}, initDisplace);
-
     function calculateTransform(e, x) {
 
-        slider.style.left = -((firstClickPosition || 0)  - (e.clientX || e.touches.clientX)) + 'px';
+        if (x) {
+            slider.style.left = x - 10 + 'px';
+        } else {
+            slider.style.left = -((firstClickPosition || 0)  - (e.clientX || e.touches.clientX)) - 25 + 'px';
+        }
 
         var calculateDistance = function(slideNumber) {
 
-            var slideOffset = slider.children[slideNumber].getBoundingClientRect().left - slideWidth / 2 + bannerPosition;
+            var slideOffset = slider.children[slideNumber].offsetParent.offsetLeft + (slideWidth * slideNumber) - 40 * slideNumber - 125;
 
-            return slideOffset.toFixed();
+            return slideOffset;
         }
 
         function rotateSlide(distance) {
@@ -98,10 +100,9 @@ function initGallery(slides) {
 
         }
 
-        return slider.children[0].style.transform;
-
 
     }
+
 
     function toFixedPosition() {
 
@@ -110,7 +111,7 @@ function initGallery(slides) {
             var points = [];
 
             for (var i = 0; i < slider.children.length; i++) {
-                points[i] = -200 * i + 50;
+                points[i] = -200 * i + 220;
             }
 
             return points;
@@ -119,30 +120,9 @@ function initGallery(slides) {
 
         var breakPoints = getBreakPoints();
 
-        if (getSliderOffset() > breakPoints[0]) {
+        if (getSliderOffset() > 150) {
 
-            slider.style.left = '125px';
-
-            slider.style.transition = 'all 0.5s';
-
-            slider.children[0].style.transform = 'rotateY(0deg) translateZ(160px)';
-            slider.children[1].style.transform = 'rotateY(-40deg) translateZ(-160px)';
-
-            for (var i = 0; i < slider.children.length; i++) {
-                slider.children[i].style.transition = 'all 0.5s';
-            }
-
-            setTimeout(function () {
-
-                slider.style.transition = 'none';
-
-                for (var i = 0; i < slider.children.length; i++) {
-                    slider.children[i].style.transition = 'none';
-                }
-
-            }, 500);
-
-            lastClickPosition = 125;
+            calculateTransform(false, 150);
 
         }
 
@@ -150,29 +130,39 @@ function initGallery(slides) {
 
             if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
 
-                slider.style.left = breakPoints[y] - slideWidth / 2 + 'px';
+                for (var i = 0; i < slider.children.length; i++) {
+                    slider.children[i].style.transition = 'all 0.5s';
 
-                slider.children[y].style.transform = 'rotateY(40deg) translateZ(-160px)';
-                slider.children[y + 1].style.transform = 'rotateY(0deg) translateZ(160px)';
-                slider.children[y + 2].style.transform = 'rotateY(-40deg) translateZ(-160px)';
-
-                slider.style.transition = 'all 0.5s';
-
-                for (var t = 0; t < slider.children.length; t++) {
-                    slider.children[t].style.transition = 'all 0.5s';
+                    slider.style.transition = 'all 0.5s';
                 }
 
-                setTimeout(function () {
+                calculateTransform(false, breakPoints[y] - slideWidth / 2);
 
-                    slider.style.transition = 'none';
+                setTimeout(function (y) {
+                    calculateTransform(false, breakPoints[y] - slideWidth / 2);
+                    console.log('www');
+                }, 400, y);
+
+
+                setTimeout(function () {
 
                     for (var z = 0; z < slider.children.length; z++) {
                         slider.children[z].style.transition = 'none';
                     }
 
-                }, 500);
+                    slider.style.transition = 'none';
+
+                }, 700);
 
             }
+
+        }
+
+        if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
+
+            console.log(breakPoints[breakPoints.length - 1]);
+
+            calculateTransform(false, breakPoints[breakPoints[breakPoints.length - 1]]);
 
         }
 
