@@ -29,6 +29,8 @@ function initGallery(slides) {
     var firstClickPosition;
     var lastClickPosition = initDisplace;
 
+    calculateTransform(false, -300);
+
     function calculateTransform(e, x) {
 
         if (x) {
