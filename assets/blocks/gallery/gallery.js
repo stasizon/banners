@@ -138,8 +138,8 @@ function initGallery(slides) {
 
             if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
 
-                for (var i = 0; i < document.getElementById('controlerContainer').children.length; i++) {
-                    document.getElementById('controlerContainer').children[i].classList.remove('controller__item--active');
+                for (var z = 0; z < document.getElementById('controlerContainer').children.length; z++) {
+                    document.getElementById('controlerContainer').children[z].classList.remove('controller__item--active');
                 }
 
                 document.getElementById('controlerContainer').children[y].classList.add('controller__item--active')
@@ -158,25 +158,23 @@ function initGallery(slides) {
 
             if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
 
-                // for (var i = 0; i < slider.children.length; i++) {
-                //     slider.children[i].style.transition = 'all 0.5s';
-                //
-                //     slider.style.transition = 'all 0.5s';
-                // }
+                for (var i = 0; i < slider.children.length; i++) {
+                    slider.children[i].style.transition = 'all 0.5s';
+
+                    slider.style.transition = 'all 0.5s';
+                }
 
                 calculateTransform(false, breakPoints[y] - slideWidth / 2 + 35);
 
-                console.log(breakPoints[y] - slideWidth / 2, 'point');
+                setTimeout(function () {
 
-                // setTimeout(function () {
-                //
-                //     for (var z = 0; z < slider.children.length; z++) {
-                //         slider.children[z].style.transition = 'none';
-                //     }
-                //
-                //     slider.style.transition = 'none';
-                //
-                // }, 700);
+                    for (var z = 0; z < slider.children.length; z++) {
+                        slider.children[z].style.transition = 'none';
+                    }
+
+                    slider.style.transition = 'none';
+
+                }, 500);
 
             }
 
