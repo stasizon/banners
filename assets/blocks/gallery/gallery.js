@@ -36,8 +36,10 @@ function initGallery(slides) {
         var points = [];
 
         for (var i = 0; i < slider.children.length; i++) {
-            points[i] = -200 * i + 220;
+            points[i] = -180 * i + 220;
         }
+
+        console.log(points);
 
         return points;
 
@@ -58,8 +60,6 @@ function initGallery(slides) {
     var firstClickPosition;
     var lastClickPosition = initDisplace;
 
-    calculateTransform(false, -400);
-
     function calculateTransform(e, x) {
 
         if (x) {
@@ -68,6 +68,8 @@ function initGallery(slides) {
         } else {
             slider.style.left = -((firstClickPosition || 0)  - (e.clientX || e.touches.clientX)) + 80 + 'px';
         }
+
+        console.log(getSliderOffset());
 
         var calculateDistance = function(slideNumber) {
 
@@ -161,15 +163,11 @@ function initGallery(slides) {
                 //
                 //     slider.style.transition = 'all 0.5s';
                 // }
-                //
-                // calculateTransform(false, breakPoints[y] - slideWidth / 2);
-                //
-                // setTimeout(function (y) {
-                //     calculateTransform(false, breakPoints[y] - slideWidth / 2);
-                //     console.log('www');
-                // }, 400, y);
-                //
-                //
+
+                calculateTransform(false, breakPoints[y] - slideWidth / 2 + 35);
+
+                console.log(breakPoints[y] - slideWidth / 2, 'point');
+
                 // setTimeout(function () {
                 //
                 //     for (var z = 0; z < slider.children.length; z++) {
