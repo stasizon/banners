@@ -1,3 +1,6 @@
+@import "blocks/gallery/gallery";
+@import "blocks/rate/rate";
+
 body {
     margin: 0;
     height: 100vh;
@@ -28,10 +31,12 @@ body {
     }
 
     &__button {
+        width: 100px;
+        text-align: center;
         position: absolute;
         top: 20px;
         right: 10px;
-        padding: 5px 10px;
+        padding: 6px 0;
         color: #fff;
         background-color: rgb(68, 128, 246);
         text-transform: uppercase;
@@ -40,7 +45,7 @@ body {
     }
 
     &__header {
-        padding: 20px;
+        padding: 20px 20px 0 20px;
         display: -webkit-flex;
         display: -ms-flex;
         display: flex;
@@ -75,33 +80,6 @@ body {
         flex-direction: row;
         width: 1500px;
         cursor: pointer;
-
-    }
-
-}
-
-.star {
-    width: 20px;
-    height: 20px;
-    background-image: url('./img/star.svg');
-    background-size: contain;
-}
-
-.gallery {
-
-    perspective: 1000px;
-    position: relative;
-
-    &__item {
-
-        min-width: 250px;
-        margin: 0 -75px 0 0;
-        height: 160px;
-        position: relative;
-        transform-style: preserve-3d;
-        -webkit-transform-style: preserve-3d;
-        -webkit-user-drag: none;
-        -webkit-user-select: none;
 
     }
 
