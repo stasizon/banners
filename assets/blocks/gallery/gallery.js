@@ -16,6 +16,35 @@ function initGallery(slides) {
 
     })();
 
+    (function initControllers() {
+
+        for (var i = 0; i < slides.length; i++) {
+
+            var controller = document.createElement('div');
+
+            controller.classList.add('controller__item');
+
+            document.getElementById('controlerContainer').appendChild(controller);
+        }
+
+        document.getElementById('controlerContainer').style.width = slides.length * 25 + 'px';
+
+    })();
+
+    function getBreakPoints() {
+
+        var points = [];
+
+        for (var i = 0; i < slider.children.length; i++) {
+            points[i] = -200 * i + 220;
+        }
+
+        return points;
+
+    }
+
+    var breakPoints = getBreakPoints();
+
     var bannerWidth = parseFloat(getComputedStyle(document.getElementById('banner')).width);
     var bannerPosition = document.getElementById('banner').getBoundingClientRect().left;
     var slideWidth = parseFloat(getComputedStyle(document.getElementById('slider').children[0]).width);
@@ -99,9 +128,21 @@ function initGallery(slides) {
             'rotateY(' + rotateSlide(calculateDistance(i)) + 'deg)' +
             'translateZ(' + scaleSlide(calculateDistance(i)) + 'px)';
 
-            // slider.children[i].style.left = -offsetOriginSlide(calculateDistance(i)) + 'px';
-
             slider.children[i].style.zIndex = calculateSlideLayer(calculateDistance(i));
+
+        }
+
+        for (var y = 0; y < slider.children.length; y++) {
+
+            if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
+
+                for (var i = 0; i < document.getElementById('controlerContainer').children.length; i++) {
+                    document.getElementById('controlerContainer').children[i].classList.remove('controller__item--active');
+                }
+
+                document.getElementById('controlerContainer').children[y].classList.add('controller__item--active')
+
+            }
 
         }
 
@@ -111,66 +152,45 @@ function initGallery(slides) {
 
     function toFixedPosition() {
 
-        // function getBreakPoints() {
-        //
-        //     var points = [];
-        //
-        //     for (var i = 0; i < slider.children.length; i++) {
-        //         points[i] = -200 * i + 220;
-        //     }
-        //
-        //     return points;
-        //
-        // }
-        //
-        // var breakPoints = getBreakPoints();
-        //
-        // if (getSliderOffset() > 150) {
-        //
-        //     calculateTransform(false, 150);
-        //
-        // }
-        //
-        // for (var y = 0; y < slider.children.length; y++) {
-        //
-        //     if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
-        //
-        //         for (var i = 0; i < slider.children.length; i++) {
-        //             slider.children[i].style.transition = 'all 0.5s';
-        //
-        //             slider.style.transition = 'all 0.5s';
-        //         }
-        //
-        //         calculateTransform(false, breakPoints[y] - slideWidth / 2);
-        //
-        //         setTimeout(function (y) {
-        //             calculateTransform(false, breakPoints[y] - slideWidth / 2);
-        //             console.log('www');
-        //         }, 400, y);
-        //
-        //
-        //         setTimeout(function () {
-        //
-        //             for (var z = 0; z < slider.children.length; z++) {
-        //                 slider.children[z].style.transition = 'none';
-        //             }
-        //
-        //             slider.style.transition = 'none';
-        //
-        //         }, 700);
-        //
-        //     }
-        //
-        // }
-        //
-        // if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
-        //
-        //     console.log(breakPoints[breakPoints.length - 1]);
-        //
-        //     calculateTransform(false, breakPoints[breakPoints[breakPoints.length - 1]]);
-        //
-        // }
+        for (var y = 0; y < slider.children.length; y++) {
 
+            if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
+
+                // for (var i = 0; i < slider.children.length; i++) {
+                //     slider.children[i].style.transition = 'all 0.5s';
+                //
+                //     slider.style.transition = 'all 0.5s';
+                // }
+                //
+                // calculateTransform(false, breakPoints[y] - slideWidth / 2);
+                //
+                // setTimeout(function (y) {
+                //     calculateTransform(false, breakPoints[y] - slideWidth / 2);
+                //     console.log('www');
+                // }, 400, y);
+                //
+                //
+                // setTimeout(function () {
+                //
+                //     for (var z = 0; z < slider.children.length; z++) {
+                //         slider.children[z].style.transition = 'none';
+                //     }
+                //
+                //     slider.style.transition = 'none';
+                //
+                // }, 700);
+
+            }
+
+        }
+
+        if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
+
+            console.log(breakPoints[breakPoints.length - 1]);
+
+            calculateTransform(false, breakPoints[breakPoints[breakPoints.length - 1]]);
+
+        }
 
     }
 

@@ -17,3 +17,58 @@
     }
 
 }
+
+.controller {
+    position: relative;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 5px auto;
+    background-color: #000;
+    border-radius: 12.5px;
+    overflow: hidden;
+    background-color: #272727;
+
+    &__item {
+        min-width: 24px;
+        min-height: 24px;
+        cursor: pointer;
+        transition: all 0.25s;
+
+        &--active {
+
+            &::after {
+
+                background-color: #26a9e0 !important;
+
+            }
+
+        }
+
+        &::after {
+
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #fff;
+            content: '';
+            margin: 6px;
+            opacity: 0.6;
+            box-shadow: 0 0 6px rgba(0,0,0,0.6);
+            transition: all 0.25s;
+
+        }
+
+        &:hover::after {
+
+            opacity: 1;
+            transition: all 0.25s;
+
+        }
+
+    }
+
+}
