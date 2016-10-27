@@ -29,19 +29,20 @@ function initGallery(slides) {
     var firstClickPosition;
     var lastClickPosition = initDisplace;
 
-    calculateTransform(false, -300);
+    calculateTransform(false, -400);
 
     function calculateTransform(e, x) {
 
         if (x) {
-            slider.style.left = x - 10 + 'px';
+            slider.style.left = x + 'px';
+            lastClickPosition = x - 80;
         } else {
-            slider.style.left = -((firstClickPosition || 0)  - (e.clientX || e.touches.clientX)) - 25 + 'px';
+            slider.style.left = -((firstClickPosition || 0)  - (e.clientX || e.touches.clientX)) + 80 + 'px';
         }
 
         var calculateDistance = function(slideNumber) {
 
-            var slideOffset = slider.children[slideNumber].offsetParent.offsetLeft + (slideWidth * slideNumber) - 40 * slideNumber - 125;
+            var slideOffset = slider.children[slideNumber].offsetParent.offsetLeft + (slideWidth * slideNumber) - 75 * slideNumber - 125;
 
             return slideOffset;
         }
@@ -71,10 +72,10 @@ function initGallery(slides) {
             var zDisplace = +distance + depth / 2;
 
             if (zDisplace > depth / 2) {
-                return depth - zDisplace;
+                return depth - zDisplace - depth / 2;
             }
 
-            return zDisplace;
+            return zDisplace - depth / 2;
 
         }
 
@@ -97,6 +98,8 @@ function initGallery(slides) {
             slider.children[i].style.transform =
             'rotateY(' + rotateSlide(calculateDistance(i)) + 'deg)' +
             'translateZ(' + scaleSlide(calculateDistance(i)) + 'px)';
+
+            // slider.children[i].style.left = -offsetOriginSlide(calculateDistance(i)) + 'px';
 
             slider.children[i].style.zIndex = calculateSlideLayer(calculateDistance(i));
 
