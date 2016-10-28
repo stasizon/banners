@@ -41,8 +41,6 @@ function initGallery(slides) {
             points[i] = -180 * i + 220;
         }
 
-        console.log(points);
-
         return points;
 
     }
@@ -154,6 +152,10 @@ function initGallery(slides) {
 
     function toFixedPosition() {
 
+        if (getSliderOffset() > breakPoints[0]) {
+            calculateTransform(false, breakPoints[0] - slideWidth / 2 + 30);
+        }
+
         for (var y = 0; y < slider.children.length; y++) {
 
             if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
@@ -164,7 +166,7 @@ function initGallery(slides) {
                 //     slider.style.transition = 'all 0.5s';
                 // }
 
-                calculateTransform(false, breakPoints[y] - slideWidth / 2 + 35);
+                calculateTransform(false, breakPoints[y] - slideWidth / 2 + 30 + 5 * y);
 
                 // setTimeout(function () {
                 //
@@ -182,9 +184,7 @@ function initGallery(slides) {
 
         if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
 
-            console.log(breakPoints[breakPoints.length - 1]);
-
-            calculateTransform(false, breakPoints[breakPoints[breakPoints.length - 1]]);
+            calculateTransform(false, breakPoints[breakPoints.length - 1] - slideWidth / 2 + 30 + 5 * breakPoints.length - 1);
 
         }
 
