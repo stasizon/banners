@@ -66,7 +66,8 @@ function initGallery(slides) {
             slider.style.left = x + 'px';
             lastClickPosition = x - 80;
         } else {
-            slider.style.left = -((firstClickPosition || 0)  - (e.clientX || e.touches.clientX)) + 80 + 'px';
+            slider.style.left = -((firstClickPosition || 0)  - (e.clientX || e.touches[0].clientX)) + 80 + 'px';
+            console.log(firstClickPosition, e.touches[0].clientX);
         }
 
         var calculateDistance = function(slideNumber) {
@@ -234,6 +235,22 @@ function initGallery(slides) {
 
     }
 
+    function touchstart(e) {
+
+        if (lastClickPosition) {
+            firstClickPosition = e.touches[0].clientX - lastClickPosition;
+        } else {
+            firstClickPosition = e.touches[0].clientX;
+        }
+
+    }
+
+    function touchmove(e) {
+
+        calculateTransform(e);
+
+    }
+
     toFixedPosition();
 
     slider.addEventListener('mousedown', mousedown);
@@ -242,6 +259,7 @@ function initGallery(slides) {
 
     slider.addEventListener('touchstart', mousedown);
     slider.addEventListener('touchend', mouseup);
-    slider.addEventListener('touchmove', calculateTransform);
+    slider.addEventListener('touchmove', touchmove);
+    slider.addEventListener('touchstart', touchstart);
 
 }
