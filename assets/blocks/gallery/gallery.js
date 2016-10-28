@@ -2,8 +2,6 @@ function initGallery(slides) {
 
     var slider = document.getElementById('slider');
 
-    calculateTransform(false, -200);
-
     (function addSlides() {
 
         for (var i = 0; i < slides.length; i++) {
@@ -27,6 +25,15 @@ function initGallery(slides) {
             controller.classList.add('controller__item');
 
             document.getElementById('controlerContainer').appendChild(controller);
+        }
+
+        for (var z = 0; z < slides.length; z++) {
+
+            document.getElementById('controlerContainer').children[z].onclick = function() {
+                console.log(breakPoints[z]);
+                // calculateTransform(false, breakPoints[z]);
+            }
+
         }
 
         document.getElementById('controlerContainer').style.width = slides.length * 25 + 'px';
@@ -67,7 +74,6 @@ function initGallery(slides) {
             lastClickPosition = x - 80;
         } else {
             slider.style.left = -((firstClickPosition || 0)  - (e.clientX || e.touches[0].clientX)) + 80 + 'px';
-            console.log(firstClickPosition, e.touches[0].clientX);
         }
 
         var calculateDistance = function(slideNumber) {
@@ -250,6 +256,8 @@ function initGallery(slides) {
         calculateTransform(e);
 
     }
+
+    calculateTransform(false, -200);
 
     toFixedPosition();
 
