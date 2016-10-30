@@ -1,167 +1,188 @@
-function initGallery(slides) {
+var slider = parent;
 
-    var slider = document.getElementById('slider');
+(function addSlides() {
 
-    (function addSlides() {
+    for (var i = 0; i < slides.length; i++) {
 
-        for (var i = 0; i < slides.length; i++) {
+        var slide = document.createElement('div');
 
-            var slide = document.createElement('div');
+        slide.classList.add('gallery__item');
+        slide.style.background = 'url(' + slides[i] + ') no-repeat center / cover';
 
-            slide.classList.add('gallery__item');
-            slide.style.background = 'url(' + slides[i] + ') no-repeat center / cover';
+        slider.appendChild(slide);
+    }
 
-            slider.appendChild(slide);
+})();
+
+function getBreakPoints() {
+
+    var points = [];
+
+    for (var i = 0; i < slider.children.length; i++) {
+        points[i] = -180 * i + 220;
+    }
+
+    return points;
+
+}
+
+var breakPoints = getBreakPoints();
+
+(function initControllers() {
+
+    for (var i = 0; i < slides.length; i++) {
+
+        var controller = document.createElement('div');
+
+        controller.classList.add('controller__item');
+
+        document.getElementById('controlerContainer').appendChild(controller);
+    }
+
+    for (var z = 0; z < slides.length; z++) {
+
+        document.getElementById('controlerContainer').children[z].onclick = function() {
+            console.log(breakPoints[z]);
+            // calculateTransform(false, breakPoints[z]);
         }
-
-    })();
-
-    function getBreakPoints() {
-
-        var points = [];
-
-        for (var i = 0; i < slider.children.length; i++) {
-            points[i] = -180 * i + 220;
-        }
-
-        return points;
 
     }
 
-    var breakPoints = getBreakPoints();
+    document.getElementById('controlerContainer').style.width = slides.length * 25 + 'px';
 
-    (function initControllers() {
+})();
 
-        for (var i = 0; i < slides.length; i++) {
+var bannerWidth = parseFloat(getComputedStyle(document.getElementById('banner')).width);
+var bannerPosition = document.getElementById('banner').getBoundingClientRect().left;
+var slideWidth = parseFloat(getComputedStyle(document.getElementById('slider').children[0]).width);
 
-            var controller = document.createElement('div');
+var getSliderOffset = function() {
+    return parseFloat(slider.style.left);
+}
 
-            controller.classList.add('controller__item');
+var initDisplace = (bannerWidth / 2) - (slideWidth / 2) * (slider.children.length / 2) + 55;
 
-            document.getElementById('controlerContainer').appendChild(controller);
-        }
+var firstClickPosition;
+var lastClickPosition = initDisplace;
 
-        for (var z = 0; z < slides.length; z++) {
+function calculateTransform(e, x) {
 
-            document.getElementById('controlerContainer').children[z].onclick = function() {
-                console.log(breakPoints[z]);
-                // calculateTransform(false, breakPoints[z]);
-            }
-
-        }
-
-        document.getElementById('controlerContainer').style.width = slides.length * 25 + 'px';
-
-    })();
-
-    var bannerWidth = parseFloat(getComputedStyle(document.getElementById('banner')).width);
-    var bannerPosition = document.getElementById('banner').getBoundingClientRect().left;
-    var slideWidth = parseFloat(getComputedStyle(document.getElementById('slider').children[0]).width);
-
-    var getSliderOffset = function() {
-        return parseFloat(slider.style.left);
+    if (x || x === 0) {
+        slider.style.left = x + 'px';
+        lastClickPosition = x - 80;
+    } else {
+        slider.style.left = -((firstClickPosition || 0)  - (e.clientX)) + 80 + 'px';
     }
 
-    var initDisplace = (bannerWidth / 2) - (slideWidth / 2) * (slider.children.length / 2) + 55;
+    var calculateDistance = function(slideNumber) {
 
-    var firstClickPosition;
-    var lastClickPosition = initDisplace;
+        var slideOffset = slider.children[slideNumber].offsetParent.offsetLeft + (slideWidth * slideNumber) - 75 * slideNumber - 125;
 
-    function calculateTransform(e, x) {
+        return slideOffset;
+    }
 
-        if (x || x === 0) {
-            slider.style.left = x + 'px';
-            lastClickPosition = x - 80;
-        } else {
-            slider.style.left = -((firstClickPosition || 0)  - (e.clientX)) + 80 + 'px';
+    function rotateSlide(distance) {
+
+        var deg = -distance / 5;
+
+        if (deg < -40) {
+            return -40;
         }
 
-        var calculateDistance = function(slideNumber) {
-
-            var slideOffset = slider.children[slideNumber].offsetParent.offsetLeft + (slideWidth * slideNumber) - 75 * slideNumber - 125;
-
-            return slideOffset;
+        if (deg > -40 && deg < 40) {
+            return deg;
         }
 
-        function rotateSlide(distance) {
+        if (deg > 40) {
+            return 40;
+        }
 
-            var deg = -distance / 5;
+    }
 
-            if (deg < -40) {
-                return -40;
+    function scaleSlide(distance) {
+
+        var depth = 320;
+
+        var zDisplace = +distance + depth / 2;
+
+        if (zDisplace > depth / 2) {
+            return depth - zDisplace - depth / 2;
+        }
+
+        return zDisplace - depth / 2;
+
+    }
+
+    function calculateSlideLayer(distance) {
+
+        var depth = 400;
+
+        var zIndex = -distance + depth / 2;
+
+        if (zIndex > depth / 2) {
+            return depth - zIndex;
+        }
+
+        return zIndex;
+
+    }
+
+    for (var i = 0; i < slider.children.length; i++) {
+
+        slider.children[i].style.transform =
+        'rotateY(' + rotateSlide(calculateDistance(i)) + 'deg)' +
+        'translateZ(' + scaleSlide(calculateDistance(i)) + 'px)';
+
+        slider.children[i].style.zIndex = calculateSlideLayer(calculateDistance(i));
+
+    }
+
+    for (var y = 0; y < slider.children.length; y++) {
+
+        if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
+
+            for (var z = 0; z < document.getElementById('controlerContainer').children.length; z++) {
+                document.getElementById('controlerContainer').children[z].classList.remove('controller__item--active');
             }
 
-            if (deg > -40 && deg < 40) {
-                return deg;
-            }
-
-            if (deg > 40) {
-                return 40;
-            }
+            document.getElementById('controlerContainer').children[y].classList.add('controller__item--active')
 
         }
-
-        function scaleSlide(distance) {
-
-            var depth = 320;
-
-            var zDisplace = +distance + depth / 2;
-
-            if (zDisplace > depth / 2) {
-                return depth - zDisplace - depth / 2;
-            }
-
-            return zDisplace - depth / 2;
-
-        }
-
-        function calculateSlideLayer(distance) {
-
-            var depth = 400;
-
-            var zIndex = -distance + depth / 2;
-
-            if (zIndex > depth / 2) {
-                return depth - zIndex;
-            }
-
-            return zIndex;
-
-        }
-
-        for (var i = 0; i < slider.children.length; i++) {
-
-            slider.children[i].style.transform =
-            'rotateY(' + rotateSlide(calculateDistance(i)) + 'deg)' +
-            'translateZ(' + scaleSlide(calculateDistance(i)) + 'px)';
-
-            slider.children[i].style.zIndex = calculateSlideLayer(calculateDistance(i));
-
-        }
-
-        for (var y = 0; y < slider.children.length; y++) {
-
-            if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
-
-                for (var z = 0; z < document.getElementById('controlerContainer').children.length; z++) {
-                    document.getElementById('controlerContainer').children[z].classList.remove('controller__item--active');
-                }
-
-                document.getElementById('controlerContainer').children[y].classList.add('controller__item--active')
-
-            }
-
-        }
-
 
     }
 
 
-    function toFixedPosition() {
+}
 
-        if (getSliderOffset() > breakPoints[0]) {
 
-            let count = getSliderOffset() - (breakPoints[0] - slideWidth / 2 + 30);
+function toFixedPosition() {
+
+    if (getSliderOffset() > breakPoints[0]) {
+
+        let count = getSliderOffset() - (breakPoints[0] - slideWidth / 2 + 30);
+
+        let timer = setInterval(function () {
+
+            if (count > 0) {
+
+                count--;
+                calculateTransform(false, getSliderOffset() - 1);
+
+            }
+
+            if (count === 0) {
+                clearInterval(timer);
+            }
+
+        }, 4);
+
+    }
+
+    for (var y = 0; y < slider.children.length; y++) {
+
+        if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
+
+            var count = getSliderOffset() - (breakPoints[y] - slideWidth / 2 + 30 + 5 * y);
 
             let timer = setInterval(function () {
 
@@ -170,66 +191,13 @@ function initGallery(slides) {
                     count--;
                     calculateTransform(false, getSliderOffset() - 1);
 
-                }
-
-                if (count === 0) {
-                    clearInterval(timer);
-                }
-
-            }, 4);
-
-        }
-
-        for (var y = 0; y < slider.children.length; y++) {
-
-            if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
-
-                var count = getSliderOffset() - (breakPoints[y] - slideWidth / 2 + 30 + 5 * y);
-
-                let timer = setInterval(function () {
-
-                    if (count > 0) {
-
-                        count--;
-                        calculateTransform(false, getSliderOffset() - 1);
-
-                    } else if (count < 0) {
-
-                        count++;
-                        calculateTransform(false, getSliderOffset() + 1);
-
-                    }
-
-                    if (count === 0) {
-                        clearInterval(timer);
-                    }
-
-                }, 4);
-
-            }
-
-        }
-
-        if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
-
-            let count = getSliderOffset() - (breakPoints[breakPoints.length - 1] - slideWidth / 2 + 30);
-
-            let timer = setInterval(function () {
-
-                if (count < 0) {
+                } else if (count < 0) {
 
                     count++;
                     calculateTransform(false, getSliderOffset() + 1);
 
                 }
 
-                if (count > 0) {
-
-                    count--;
-                    calculateTransform(false, getSliderOffset() - 1);
-
-                }
-
                 if (count === 0) {
                     clearInterval(timer);
                 }
@@ -240,77 +208,105 @@ function initGallery(slides) {
 
     }
 
-    function mousedown(e) {
+    if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
 
-        slider.style.cursor = 'move';
+        let count = getSliderOffset() - (breakPoints[breakPoints.length - 1] - slideWidth / 2 + 30);
 
-        if (lastClickPosition) {
-            firstClickPosition = e.clientX - lastClickPosition;
-        } else {
-            firstClickPosition = e.clientX;
-        }
+        let timer = setInterval(function () {
 
-        slider.addEventListener('mousemove', calculateTransform);
+            if (count < 0) {
 
-        return false;
+                count++;
+                calculateTransform(false, getSliderOffset() + 1);
 
-    }
+            }
 
-    function mouseup(e) {
+            if (count > 0) {
 
-        slider.style.cursor = 'pointer';
+                count--;
+                calculateTransform(false, getSliderOffset() - 1);
 
-        lastClickPosition = -(firstClickPosition - e.clientX);
+            }
 
-        slider.removeEventListener('mousemove', calculateTransform);
+            if (count === 0) {
+                clearInterval(timer);
+            }
 
-        toFixedPosition();
-
-        return false;
+        }, 4);
 
     }
 
-    function mouseleave(e) {
+}
 
-        slider.style.cursor = 'pointer';
+function mousedown(e) {
 
-        lastClickPosition = -(firstClickPosition - e.clientX);
+    slider.style.cursor = 'move';
 
-        slider.removeEventListener('mousemove', calculateTransform);
-
-        toFixedPosition();
-
-        return false;
-
+    if (lastClickPosition) {
+        firstClickPosition = e.clientX - lastClickPosition;
+    } else {
+        firstClickPosition = e.clientX;
     }
 
-    function touchstart(e) {
+    slider.addEventListener('mousemove', calculateTransform);
 
-        if (lastClickPosition) {
-            firstClickPosition = e.touches[0].clientX - lastClickPosition;
-        } else {
-            firstClickPosition = e.touches[0].clientX;
-        }
+    return false;
 
-    }
+}
 
-    function touchmove(e) {
+function mouseup(e) {
 
-        calculateTransform(e);
+    slider.style.cursor = 'pointer';
 
-    }
+    lastClickPosition = -(firstClickPosition - e.clientX);
 
-    calculateTransform(false, -225);
+    slider.removeEventListener('mousemove', calculateTransform);
 
     toFixedPosition();
 
-    slider.addEventListener('mousedown', mousedown);
-    slider.addEventListener('mouseup', mouseup);
-    slider.addEventListener('mouseleave', mouseleave);
-
-    slider.addEventListener('touchstart', mousedown);
-    slider.addEventListener('touchend', mouseup);
-    slider.addEventListener('touchmove', touchmove);
-    slider.addEventListener('touchstart', touchstart);
+    return false;
 
 }
+
+function mouseleave(e) {
+
+    slider.style.cursor = 'pointer';
+
+    lastClickPosition = -(firstClickPosition - e.clientX);
+
+    slider.removeEventListener('mousemove', calculateTransform);
+
+    toFixedPosition();
+
+    return false;
+
+}
+
+function touchstart(e) {
+
+    if (lastClickPosition) {
+        firstClickPosition = e.touches[0].clientX - lastClickPosition;
+    } else {
+        firstClickPosition = e.touches[0].clientX;
+    }
+
+}
+
+function touchmove(e) {
+
+    calculateTransform(e);
+
+}
+
+calculateTransform(false, -225);
+
+toFixedPosition();
+
+slider.addEventListener('mousedown', mousedown);
+slider.addEventListener('mouseup', mouseup);
+slider.addEventListener('mouseleave', mouseleave);
+
+slider.addEventListener('touchstart', mousedown);
+slider.addEventListener('touchend', mouseup);
+slider.addEventListener('touchmove', touchmove);
+slider.addEventListener('touchstart', touchstart);

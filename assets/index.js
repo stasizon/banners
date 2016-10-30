@@ -1,5 +1,18 @@
-//=require blocks/rate/rate.js
-//=require blocks/gallery/gallery.js
+var __adKernelBanner = {
+
+    initGallery: function(slides, parent) {
+
+        //=require blocks/gallery/gallery.js
+
+    },
+
+    setRate: function functionName() {
+
+        //=require blocks/rate/rate.js
+
+    }
+
+};
 
 var imageArray = [
                   './img/unsplash.jpg',
@@ -10,5 +23,6 @@ var imageArray = [
                   './img/unsplash-6.jpg'
                  ];
 
-setRate();
-initGallery(imageArray);
+__adKernelBanner.initGallery(imageArray, document.getElementById('slider'));
+
+__adKernelBanner.setRate();
