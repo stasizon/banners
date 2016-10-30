@@ -16,6 +16,20 @@ function initGallery(slides) {
 
     })();
 
+    function getBreakPoints() {
+
+        var points = [];
+
+        for (var i = 0; i < slider.children.length; i++) {
+            points[i] = -180 * i + 220;
+        }
+
+        return points;
+
+    }
+
+    var breakPoints = getBreakPoints();
+
     (function initControllers() {
 
         for (var i = 0; i < slides.length; i++) {
@@ -40,20 +54,6 @@ function initGallery(slides) {
 
     })();
 
-    function getBreakPoints() {
-
-        var points = [];
-
-        for (var i = 0; i < slider.children.length; i++) {
-            points[i] = -180 * i + 220;
-        }
-
-        return points;
-
-    }
-
-    var breakPoints = getBreakPoints();
-
     var bannerWidth = parseFloat(getComputedStyle(document.getElementById('banner')).width);
     var bannerPosition = document.getElementById('banner').getBoundingClientRect().left;
     var slideWidth = parseFloat(getComputedStyle(document.getElementById('slider').children[0]).width);
@@ -73,7 +73,7 @@ function initGallery(slides) {
             slider.style.left = x + 'px';
             lastClickPosition = x - 80;
         } else {
-            slider.style.left = -((firstClickPosition || 0)  - (e.clientX || e.touches[0].clientX)) + 80 + 'px';
+            slider.style.left = -((firstClickPosition || 0)  - (e.clientX)) + 80 + 'px';
         }
 
         var calculateDistance = function(slideNumber) {
@@ -160,30 +160,51 @@ function initGallery(slides) {
     function toFixedPosition() {
 
         if (getSliderOffset() > breakPoints[0]) {
-            calculateTransform(false, breakPoints[0] - slideWidth / 2 + 30);
+
+            let count = getSliderOffset() - (breakPoints[0] - slideWidth / 2 + 30);
+
+            let timer = setInterval(function () {
+
+                if (count > 0) {
+
+                    count--;
+                    calculateTransform(false, getSliderOffset() - 1);
+
+                }
+
+                if (count === 0) {
+                    clearInterval(timer);
+                }
+
+            }, 4);
+
         }
 
         for (var y = 0; y < slider.children.length; y++) {
 
             if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
 
-                // for (var i = 0; i < slider.children.length; i++) {
-                //     slider.children[i].style.transition = 'all 0.5s';
-                //
-                //     slider.style.transition = 'all 0.5s';
-                // }
+                var count = getSliderOffset() - (breakPoints[y] - slideWidth / 2 + 30 + 5 * y);
 
-                calculateTransform(false, breakPoints[y] - slideWidth / 2 + 30 + 5 * y);
+                let timer = setInterval(function (y) {
 
-                // setTimeout(function () {
-                //
-                //     for (var z = 0; z < slider.children.length; z++) {
-                //         slider.children[z].style.transition = 'none';
-                //     }
-                //
-                //     slider.style.transition = 'none';
-                //
-                // }, 500);
+                    if (count > 0) {
+
+                        count--;
+                        calculateTransform(false, getSliderOffset() - 1);
+
+                    } else if (count < 0) {
+
+                        count++;
+                        calculateTransform(false, getSliderOffset() + 1);
+
+                    }
+
+                    if (count === 0) {
+                        clearInterval(timer);
+                    }
+
+                }, 4, y);
 
             }
 
@@ -191,7 +212,31 @@ function initGallery(slides) {
 
         if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
 
-            calculateTransform(false, breakPoints[breakPoints.length - 1] - slideWidth / 2 + 30 + 5 * breakPoints.length - 1);
+            let count = getSliderOffset() - (breakPoints[breakPoints.length - 1] - slideWidth / 2 + 30);
+
+            console.log(count);
+
+            let timer = setInterval(function () {
+
+                if (count < 0) {
+
+                    count++;
+                    calculateTransform(false, getSliderOffset() + 1);
+
+                }
+
+                if (count > 0) {
+
+                    count--;
+                    calculateTransform(false, getSliderOffset() - 1);
+
+                }
+
+                if (count === 0) {
+                    clearInterval(timer);
+                }
+
+            }, 4);
 
         }
 
@@ -257,7 +302,7 @@ function initGallery(slides) {
 
     }
 
-    calculateTransform(false, -200);
+    calculateTransform(false, -225);
 
     toFixedPosition();
 
