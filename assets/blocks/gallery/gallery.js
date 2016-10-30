@@ -69,7 +69,7 @@ function initGallery(slides) {
 
     function calculateTransform(e, x) {
 
-        if (x) {
+        if (x || x === 0) {
             slider.style.left = x + 'px';
             lastClickPosition = x - 80;
         } else {
@@ -186,7 +186,7 @@ function initGallery(slides) {
 
                 var count = getSliderOffset() - (breakPoints[y] - slideWidth / 2 + 30 + 5 * y);
 
-                let timer = setInterval(function (y) {
+                let timer = setInterval(function () {
 
                     if (count > 0) {
 
@@ -204,7 +204,7 @@ function initGallery(slides) {
                         clearInterval(timer);
                     }
 
-                }, 4, y);
+                }, 4);
 
             }
 
@@ -213,8 +213,6 @@ function initGallery(slides) {
         if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
 
             let count = getSliderOffset() - (breakPoints[breakPoints.length - 1] - slideWidth / 2 + 30);
-
-            console.log(count);
 
             let timer = setInterval(function () {
 
