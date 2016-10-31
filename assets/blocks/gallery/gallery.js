@@ -93,7 +93,7 @@ var getSliderOffset = function() {
     return parseFloat(slider.style.left);
 }
 
-var initDisplace = (bannerWidth / 2) - (slideWidth / 2) * (slider.children.length / 2) + 55;
+var initDisplace = -50;
 
 var firstClickPosition;
 var lastClickPosition = initDisplace;
@@ -203,8 +203,6 @@ function toFixedPosition() {
 
             }
 
-            console.log('timer');
-
             if (count === 0) {
                 clearInterval(timer);
             }
@@ -275,7 +273,7 @@ function toFixedPosition() {
 
 function mousedown(e) {
 
-    slider.style.cursor = 'move';
+    document.getElementById('gallery').style.cursor = 'move';
 
     if (lastClickPosition) {
         firstClickPosition = e.clientX - lastClickPosition;
@@ -283,7 +281,7 @@ function mousedown(e) {
         firstClickPosition = e.clientX;
     }
 
-    slider.addEventListener('mousemove', calculateTransform);
+    document.getElementById('gallery').addEventListener('mousemove', calculateTransform);
 
     return false;
 
@@ -291,11 +289,11 @@ function mousedown(e) {
 
 function mouseup(e) {
 
-    slider.style.cursor = 'pointer';
+    document.getElementById('gallery').style.cursor = 'pointer';
 
     lastClickPosition = -(firstClickPosition - e.clientX);
 
-    slider.removeEventListener('mousemove', calculateTransform);
+    document.getElementById('gallery').removeEventListener('mousemove', calculateTransform);
 
     toFixedPosition();
 
@@ -305,9 +303,9 @@ function mouseup(e) {
 
 function mouseleave(e) {
 
-    slider.style.cursor = 'pointer';
+    document.getElementById('gallery').style.cursor = 'pointer';
 
-    slider.removeEventListener('mousemove', calculateTransform);
+    document.getElementById('gallery').removeEventListener('mousemove', calculateTransform);
 
     toFixedPosition();
 
@@ -331,15 +329,15 @@ function touchmove(e) {
 
 }
 
-calculateTransform(false, -225);
+calculateTransform(false, initDisplace);
 
 toFixedPosition();
 
-slider.addEventListener('mousedown', mousedown);
-slider.addEventListener('mouseup', mouseup);
-slider.addEventListener('mouseleave', mouseleave);
+document.getElementById('gallery').addEventListener('mousedown', mousedown);
+document.getElementById('gallery').addEventListener('mouseup', mouseup);
+document.getElementById('gallery').addEventListener('mouseleave', mouseleave);
 
-slider.addEventListener('touchstart', mousedown);
-slider.addEventListener('touchend', mouseup);
-slider.addEventListener('touchmove', touchmove);
-slider.addEventListener('touchstart', touchstart);
+document.getElementById('gallery').addEventListener('touchstart', mousedown);
+document.getElementById('gallery').addEventListener('touchend', mouseup);
+document.getElementById('gallery').addEventListener('touchmove', touchmove);
+document.getElementById('gallery').addEventListener('touchstart', touchstart);
