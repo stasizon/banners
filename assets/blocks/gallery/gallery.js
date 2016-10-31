@@ -36,15 +36,48 @@ var breakPoints = getBreakPoints();
 
         controller.classList.add('controller__item');
 
-        document.getElementById('controlerContainer').appendChild(controller);
-    }
+        controller.setAttribute('data-number', i);
 
-    for (var z = 0; z < slides.length; z++) {
+        controller.onclick = function(e) {
 
-        document.getElementById('controlerContainer').children[z].onclick = function() {
-            console.log(breakPoints[z]);
-            // calculateTransform(false, breakPoints[z]);
+            var slideNumber = e.target.getAttribute('data-number');
+
+            let count = 0;
+
+            function timer() {
+
+                var times = setTimeout(function() {
+
+                    count++;
+
+                    let firstPosition = getSliderOffset();
+                    let secondPosition = breakPoints[slideNumber] - slideWidth / 2 + 30 + 5 * slideNumber;
+
+                    if (firstPosition < secondPosition) {
+
+                        calculateTransform(false, firstPosition + 5);
+
+                    } else if (firstPosition > secondPosition) {
+
+                        calculateTransform(false, firstPosition - 5);
+
+                    }
+
+                    if (firstPosition !== secondPosition && firstPosition !== secondPosition - 5 && firstPosition !== secondPosition + 5) {
+
+                        timer();
+
+                    }
+
+                }, 4);
+
+            }
+
+            timer();
+
         }
+
+        document.getElementById('controlerContainer').appendChild(controller);
 
     }
 
@@ -170,6 +203,8 @@ function toFixedPosition() {
 
             }
 
+            console.log('timer');
+
             if (count === 0) {
                 clearInterval(timer);
             }
@@ -271,8 +306,6 @@ function mouseup(e) {
 function mouseleave(e) {
 
     slider.style.cursor = 'pointer';
-
-    lastClickPosition = -(firstClickPosition - e.clientX);
 
     slider.removeEventListener('mousemove', calculateTransform);
 
