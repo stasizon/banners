@@ -104,12 +104,12 @@ function calculateTransform(e, x) {
         slider.style.left = x + 'px';
         lastClickPosition = x - 80;
     } else {
-        slider.style.left = -((firstClickPosition || 0)  - (e.clientX)) + 80 + 'px';
+        slider.style.left = (-((firstClickPosition || 0)  - e.clientX) / 2.5).toFixed() + 'px';
     }
 
     var calculateDistance = function(slideNumber) {
 
-        var slideOffset = slider.children[slideNumber].offsetParent.offsetLeft + (slideWidth * slideNumber) - 75 * slideNumber - 125;
+        var slideOffset = slider.children[slideNumber].offsetParent.offsetLeft + (slideWidth * slideNumber) - 100 * slideNumber - 125;
 
         return slideOffset;
     }
@@ -134,15 +134,11 @@ function calculateTransform(e, x) {
 
     function scaleSlide(distance) {
 
-        var depth = 320;
-
-        var zDisplace = +distance + depth / 2;
-
-        if (zDisplace > depth / 2) {
-            return depth - zDisplace - depth / 2;
+        if (distance > 0) {
+            return -distance * 2;
         }
 
-        return zDisplace - depth / 2;
+        return distance * 2;
 
     }
 
@@ -190,84 +186,84 @@ function calculateTransform(e, x) {
 
 function toFixedPosition() {
 
-    if (getSliderOffset() > breakPoints[0]) {
-
-        let count = getSliderOffset() - (breakPoints[0] - slideWidth / 2 + 30);
-
-        let timer = setInterval(function () {
-
-            if (count > 0) {
-
-                count--;
-                calculateTransform(false, getSliderOffset() - 1);
-
-            }
-
-            if (count === 0) {
-                clearInterval(timer);
-            }
-
-        }, 4);
-
-    }
-
-    for (var y = 0; y < slider.children.length; y++) {
-
-        if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
-
-            var count = getSliderOffset() - (breakPoints[y] - slideWidth / 2 + 30 + 5 * y);
-
-            let timer = setInterval(function () {
-
-                if (count > 0) {
-
-                    count--;
-                    calculateTransform(false, getSliderOffset() - 1);
-
-                } else if (count < 0) {
-
-                    count++;
-                    calculateTransform(false, getSliderOffset() + 1);
-
-                }
-
-                if (count === 0) {
-                    clearInterval(timer);
-                }
-
-            }, 4);
-
-        }
-
-    }
-
-    if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
-
-        let count = getSliderOffset() - (breakPoints[breakPoints.length - 1] - slideWidth / 2 + 30);
-
-        let timer = setInterval(function () {
-
-            if (count < 0) {
-
-                count++;
-                calculateTransform(false, getSliderOffset() + 1);
-
-            }
-
-            if (count > 0) {
-
-                count--;
-                calculateTransform(false, getSliderOffset() - 1);
-
-            }
-
-            if (count === 0) {
-                clearInterval(timer);
-            }
-
-        }, 4);
-
-    }
+    // if (getSliderOffset() > breakPoints[0]) {
+    //
+    //     let count = getSliderOffset() - (breakPoints[0] - slideWidth / 2 + 30);
+    //
+    //     let timer = setInterval(function () {
+    //
+    //         if (count > 0) {
+    //
+    //             count--;
+    //             calculateTransform(false, getSliderOffset() - 1);
+    //
+    //         }
+    //
+    //         if (count === 0) {
+    //             clearInterval(timer);
+    //         }
+    //
+    //     }, 4);
+    //
+    // }
+    //
+    // for (var y = 0; y < slider.children.length; y++) {
+    //
+    //     if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
+    //
+    //         var count = getSliderOffset() - (breakPoints[y] - slideWidth / 2 + 30 + 5 * y);
+    //
+    //         let timer = setInterval(function () {
+    //
+    //             if (count > 0) {
+    //
+    //                 count--;
+    //                 calculateTransform(false, getSliderOffset() - 1);
+    //
+    //             } else if (count < 0) {
+    //
+    //                 count++;
+    //                 calculateTransform(false, getSliderOffset() + 1);
+    //
+    //             }
+    //
+    //             if (count === 0) {
+    //                 clearInterval(timer);
+    //             }
+    //
+    //         }, 4);
+    //
+    //     }
+    //
+    // }
+    //
+    // if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
+    //
+    //     let count = getSliderOffset() - (breakPoints[breakPoints.length - 1] - slideWidth / 2 + 30);
+    //
+    //     let timer = setInterval(function () {
+    //
+    //         if (count < 0) {
+    //
+    //             count++;
+    //             calculateTransform(false, getSliderOffset() + 1);
+    //
+    //         }
+    //
+    //         if (count > 0) {
+    //
+    //             count--;
+    //             calculateTransform(false, getSliderOffset() - 1);
+    //
+    //         }
+    //
+    //         if (count === 0) {
+    //             clearInterval(timer);
+    //         }
+    //
+    //     }, 4);
+    //
+    // }
 
 }
 
