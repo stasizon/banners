@@ -19,7 +19,7 @@ function getBreakPoints() {
     var points = [];
 
     for (var i = 0; i < slider.children.length; i++) {
-        points[i] = -180 * i + 220;
+        points[i] = -155 * i + 220;
     }
 
     return points;
@@ -33,9 +33,7 @@ var breakPoints = getBreakPoints();
     for (var i = 0; i < slides.length; i++) {
 
         var controller = document.createElement('div');
-
         controller.classList.add('controller__item');
-
         controller.setAttribute('data-number', i);
 
         controller.onclick = function(e) {
@@ -57,9 +55,13 @@ var breakPoints = getBreakPoints();
 
                         calculateTransform(false, firstPosition + 5);
 
+                        lastClickPosition = lastClickPosition + 5;
+
                     } else if (firstPosition > secondPosition) {
 
                         calculateTransform(false, firstPosition - 5);
+
+                        lastClickPosition = lastClickPosition + 5;
 
                     }
 
@@ -85,26 +87,24 @@ var breakPoints = getBreakPoints();
 
 })();
 
-var bannerWidth = parseFloat(getComputedStyle(document.getElementById('banner')).width);
-var bannerPosition = document.getElementById('banner').getBoundingClientRect().left;
 var slideWidth = parseFloat(getComputedStyle(document.getElementById('slider').children[0]).width);
 
 var getSliderOffset = function() {
     return parseFloat(slider.style.left);
 }
 
-var initDisplace = -50;
+var initDisplace = -25;
 
-var firstClickPosition;
-var lastClickPosition = initDisplace;
+var firstClickPosition = 0;
+var lastClickPosition = 0;
 
 function calculateTransform(e, x) {
 
     if (x || x === 0) {
         slider.style.left = x + 'px';
-        lastClickPosition = x - 80;
+
     } else {
-        slider.style.left = (-((firstClickPosition || 0)  - e.clientX) / 2.5).toFixed() + 'px';
+        slider.style.left = Math.ceil((e.clientX - firstClickPosition) / 2.5) + 'px';
     }
 
     var calculateDistance = function(slideNumber) {
@@ -170,7 +170,7 @@ function calculateTransform(e, x) {
 
         if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
 
-            for (var z = 0; z < document.getElementById('controlerContainer').children.length; z++) {
+            for (let z = 0; z < document.getElementById('controlerContainer').children.length; z++) {
                 document.getElementById('controlerContainer').children[z].classList.remove('controller__item--active');
             }
 
@@ -178,98 +178,113 @@ function calculateTransform(e, x) {
 
         }
 
+        if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
+            for (let z = 0; z < document.getElementById('controlerContainer').children.length; z++) {
+                document.getElementById('controlerContainer').children[z].classList.remove('controller__item--active');
+            }
+
+            document.getElementById('controlerContainer').children[document.getElementById('controlerContainer').children.length - 1].classList.add('controller__item--active')
+        }
+
     }
 
 
 }
 
+function toFixedPosition(e) {
 
-function toFixedPosition() {
+    document.getElementById('gallery').removeEventListener('mousemove', calculateTransform);
 
-    // if (getSliderOffset() > breakPoints[0]) {
-    //
-    //     let count = getSliderOffset() - (breakPoints[0] - slideWidth / 2 + 30);
-    //
-    //     let timer = setInterval(function () {
-    //
-    //         if (count > 0) {
-    //
-    //             count--;
-    //             calculateTransform(false, getSliderOffset() - 1);
-    //
-    //         }
-    //
-    //         if (count === 0) {
-    //             clearInterval(timer);
-    //         }
-    //
-    //     }, 4);
-    //
-    // }
-    //
-    // for (var y = 0; y < slider.children.length; y++) {
-    //
-    //     if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
-    //
-    //         var count = getSliderOffset() - (breakPoints[y] - slideWidth / 2 + 30 + 5 * y);
-    //
-    //         let timer = setInterval(function () {
-    //
-    //             if (count > 0) {
-    //
-    //                 count--;
-    //                 calculateTransform(false, getSliderOffset() - 1);
-    //
-    //             } else if (count < 0) {
-    //
-    //                 count++;
-    //                 calculateTransform(false, getSliderOffset() + 1);
-    //
-    //             }
-    //
-    //             if (count === 0) {
-    //                 clearInterval(timer);
-    //             }
-    //
-    //         }, 4);
-    //
-    //     }
-    //
-    // }
-    //
-    // if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
-    //
-    //     let count = getSliderOffset() - (breakPoints[breakPoints.length - 1] - slideWidth / 2 + 30);
-    //
-    //     let timer = setInterval(function () {
-    //
-    //         if (count < 0) {
-    //
-    //             count++;
-    //             calculateTransform(false, getSliderOffset() + 1);
-    //
-    //         }
-    //
-    //         if (count > 0) {
-    //
-    //             count--;
-    //             calculateTransform(false, getSliderOffset() - 1);
-    //
-    //         }
-    //
-    //         if (count === 0) {
-    //             clearInterval(timer);
-    //         }
-    //
-    //     }, 4);
-    //
-    // }
+    if (getSliderOffset() > breakPoints[0]) {
+
+        let count = getSliderOffset() - (breakPoints[0] - slideWidth / 2 + 20);
+
+        let timer = setInterval(function () {
+
+            if (count > 0) {
+
+                count--;
+                calculateTransform(false, getSliderOffset() - 1);
+
+            }
+
+            if (count === 0) {
+                clearInterval(timer);
+            }
+
+        }, 4);
+
+        lastClickPosition = e.clientX - firstClickPosition - count * 2.5;
+
+    }
+
+    for (var y = 0; y < slider.children.length; y++) {
+
+        if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
+
+            let count = getSliderOffset() - (breakPoints[y] - slideWidth / 2 + 30 + 5 * y);
+
+            let timer = setInterval(function () {
+
+                if (count > 0) {
+
+                    count--;
+                    calculateTransform(false, getSliderOffset() - 1);
+
+                } else if (count < 0) {
+
+                    count++;
+                    calculateTransform(false, getSliderOffset() + 1);
+
+                }
+
+                if (count === 0) {
+                    clearInterval(timer);
+                }
+
+            }, 4);
+
+            lastClickPosition = e.clientX - firstClickPosition - count * 2.5;
+
+        }
+
+    }
+
+    if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
+
+        let count = getSliderOffset() - (breakPoints[breakPoints.length - 1] - slideWidth / 2 + 30 + 5 * (breakPoints.length - 1));
+
+        let timer = setInterval(function () {
+
+            if (count < 0) {
+
+                count++;
+                calculateTransform(false, getSliderOffset() + 1);
+
+            }
+
+            if (count > 0) {
+
+                count--;
+                calculateTransform(false, getSliderOffset() - 1);
+
+            }
+
+            if (count === 0) {
+                clearInterval(timer);
+            }
+
+        }, 4);
+
+        lastClickPosition = e.clientX - firstClickPosition - count * 2.5;
+
+    }
 
 }
 
 function mousedown(e) {
 
-    document.getElementById('gallery').style.cursor = 'move';
+    console.log(firstClickPosition, lastClickPosition);
 
     if (lastClickPosition) {
         firstClickPosition = e.clientX - lastClickPosition;
@@ -278,32 +293,6 @@ function mousedown(e) {
     }
 
     document.getElementById('gallery').addEventListener('mousemove', calculateTransform);
-
-    return false;
-
-}
-
-function mouseup(e) {
-
-    document.getElementById('gallery').style.cursor = 'pointer';
-
-    lastClickPosition = -(firstClickPosition - e.clientX);
-
-    document.getElementById('gallery').removeEventListener('mousemove', calculateTransform);
-
-    toFixedPosition();
-
-    return false;
-
-}
-
-function mouseleave(e) {
-
-    document.getElementById('gallery').style.cursor = 'pointer';
-
-    document.getElementById('gallery').removeEventListener('mousemove', calculateTransform);
-
-    toFixedPosition();
 
     return false;
 
@@ -325,15 +314,15 @@ function touchmove(e) {
 
 }
 
-calculateTransform(false, initDisplace);
+calculateTransform(false, -25);
 
-toFixedPosition();
+toFixedPosition({clientX: -50});
 
 document.getElementById('gallery').addEventListener('mousedown', mousedown);
-document.getElementById('gallery').addEventListener('mouseup', mouseup);
-document.getElementById('gallery').addEventListener('mouseleave', mouseleave);
+document.getElementById('gallery').addEventListener('mouseup', toFixedPosition);
+document.getElementById('gallery').addEventListener('mouseleave', toFixedPosition);
 
 document.getElementById('gallery').addEventListener('touchstart', mousedown);
-document.getElementById('gallery').addEventListener('touchend', mouseup);
+document.getElementById('gallery').addEventListener('touchend', toFixedPosition);
 document.getElementById('gallery').addEventListener('touchmove', touchmove);
 document.getElementById('gallery').addEventListener('touchstart', touchstart);

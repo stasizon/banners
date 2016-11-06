@@ -1,18 +1,20 @@
 .gallery {
-
-    perspective: 1000px;
     position: relative;
 
+    perspective: 1000px;
+
     &__item {
+        position: relative;
 
         min-width: 250px;
-        margin: 0 -100px 0 0;
         height: 160px;
-        position: relative;
+        margin: 0 -100px 0 0;
+
+        -webkit-user-select: none;
+
         transform-style: preserve-3d;
         -webkit-transform-style: preserve-3d;
         -webkit-user-drag: none;
-        -webkit-user-select: none;
 
     }
 
@@ -20,27 +22,30 @@
 
 .controller {
     position: relative;
+
     display: -webkit-flex;
     display: -ms-flex;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin: 5px auto;
-    background-color: #000;
-    border-radius: 12.5px;
     overflow: hidden;
+    flex-direction: row;
+
+    margin: 5px auto;
+
+    border-radius: 12.5px;
+    background-color: #000;
     background-color: #272727;
+
+    justify-content: center;
 
     &__item {
         min-width: 24px;
         min-height: 24px;
-        cursor: pointer;
+
         transition: all 0.25s;
 
         &--active {
 
             &::after {
-
                 background-color: #26a9e0 !important;
 
             }
@@ -48,24 +53,26 @@
         }
 
         &::after {
-
             position: absolute;
+
             width: 12px;
             height: 12px;
+            margin: 6px;
+
+            content: '';
+            transition: all 0.25s;
+
+            opacity: 0.6;
             border-radius: 50%;
             background-color: #fff;
-            content: '';
-            margin: 6px;
-            opacity: 0.6;
             box-shadow: 0 0 6px rgba(0,0,0,0.6);
-            transition: all 0.25s;
 
         }
 
         &:hover::after {
+            transition: all 0.25s;
 
             opacity: 1;
-            transition: all 0.25s;
 
         }
 
