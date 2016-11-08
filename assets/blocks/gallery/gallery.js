@@ -54,14 +54,12 @@ var breakPoints = getBreakPoints();
                     if (firstPosition < secondPosition) {
 
                         calculateTransform(false, firstPosition + 5);
-
-                        lastClickPosition = lastClickPosition + 5;
+                        lastClickPosition = lastClickPosition + 5 * 2.5;
 
                     } else if (firstPosition > secondPosition) {
 
                         calculateTransform(false, firstPosition - 5);
-
-                        lastClickPosition = lastClickPosition + 5;
+                        lastClickPosition = lastClickPosition - 5 * 2.5;
 
                     }
 
@@ -99,6 +97,10 @@ var firstClickPosition = 0;
 var lastClickPosition = 0;
 
 function calculateTransform(e, x) {
+
+    if (e.clientX > 470) {
+        toFixedPosition(e);
+    }
 
     if (x || x === 0) {
         slider.style.left = x + 'px';
@@ -244,7 +246,7 @@ function toFixedPosition(e) {
 
             }, 4);
 
-            lastClickPosition = e.clientX - firstClickPosition - count * 2.5;
+            lastClickPosition = (e.clientX - firstClickPosition - count * 2.5);
 
         }
 
@@ -284,8 +286,6 @@ function toFixedPosition(e) {
 
 function mousedown(e) {
 
-    console.log(firstClickPosition, lastClickPosition);
-
     if (lastClickPosition) {
         firstClickPosition = e.clientX - lastClickPosition;
     } else {
@@ -320,7 +320,7 @@ toFixedPosition({clientX: -50});
 
 document.getElementById('gallery').addEventListener('mousedown', mousedown);
 document.getElementById('gallery').addEventListener('mouseup', toFixedPosition);
-document.getElementById('gallery').addEventListener('mouseleave', toFixedPosition);
+// document.getElementById('banner').addEventListener('mouseleave', toFixedPosition);
 
 document.getElementById('gallery').addEventListener('touchstart', mousedown);
 document.getElementById('gallery').addEventListener('touchend', toFixedPosition);
