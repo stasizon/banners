@@ -175,6 +175,8 @@ function setSlide(slideId, enableScroll) {
 
     if (enableScroll) {
 
+        clearInterval(timer);
+
         let i = 0;
 
         let positionOnMouseOut = getSliderOffset();
