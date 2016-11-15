@@ -161,19 +161,54 @@ function checkCurrentSlide() {
 
 }
 
+function getCurrentSlide() {
+
+    if (getSliderOffset() > breakPoints[0]) {
+
+        lastClickPosition = 285;
+        return 0;
+    }
+
+    for (var y = 0; y < slider.children.length; y++) {
+
+        if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
+
+            lastClickPosition = -90 - (375 * (y - 1));
+
+            return y;
+
+        }
+
+    }
+
+    if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
+
+        lastClickPosition = -90 - (375 * (breakPoints[breakPoints.length - 1] - 1));
+
+        return slider.children.length - 1;
+
+    }
+
+}
+
 function setOffset(offset) {
 
     slider.style.left = offset + 'px';
+
+    getCurrentSlide();
 
     calculateTransform();
 
 }
 
 var timer;
+var globalScroll;
 
 function setSlide(slideId, enableScroll) {
 
     if (enableScroll) {
+
+        globalScroll = enableScroll;
 
         clearInterval(timer);
 
@@ -183,19 +218,19 @@ function setSlide(slideId, enableScroll) {
 
         timer = setInterval(function () {
 
-            let offset = Math.round((positionOnMouseOut - (breakPoints[slideId] - 75)) / 5);
+            let offset = Math.round((positionOnMouseOut - (breakPoints[slideId] - 75)) / 2);
 
             if (offset > 0) {
                 i++;
-                setOffset( getSliderOffset() - 5 );
+                setOffset( getSliderOffset() - 2 );
             } else if(offset < 0) {
                 i--;
-                setOffset( getSliderOffset() + 5 );
+                setOffset( getSliderOffset() + 2 );
             }
 
             if (i === offset) {
+                globalScroll = true;
                 clearInterval(timer);
-                lastClickPosition = -90 - (375 * (slideId - 1));
                 for (let z = 0; z < document.getElementById('controlerContainer').children.length; z++) {
                     document.getElementById('controlerContainer').children[z].classList.remove('controller__item--active');
                 }
@@ -208,11 +243,11 @@ function setSlide(slideId, enableScroll) {
     } else {
 
         if (slideId === 0) {
-            setOffset( breakPoints[0] - 75 );
             lastClickPosition = 285;
+            setOffset( breakPoints[0] - 75 );
         } else {
-            setOffset( breakPoints[slideId] - 75 );
             lastClickPosition = -90 - (375 * (slideId - 1));
+            setOffset( breakPoints[slideId] - 75 );
         }
 
     }
@@ -224,7 +259,10 @@ function mouseDown(e) {
     firstClickPosition = e.clientX - lastClickPosition;
 
     clearInterval(timer);
-    checkCurrentSlide();
+    // checkCurrentSlide();
+
+    setSlide(getCurrentSlide());
+
     document.getElementById('gallery').addEventListener('mousemove', mouseMove);
 
     return false;
@@ -249,8 +287,8 @@ function mouseUp(e) {
 
 function mouseLeave(e) {
 
-    clearInterval(timer);
-    checkCurrentSlide();
+    // clearInterval(timer);
+    // checkCurrentSlide();
 
     document.getElementById('gallery').removeEventListener('mousemove', mouseMove);
 
