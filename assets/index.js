@@ -1,3 +1,9 @@
+setTimeout(function () {
+
+    document.getElementById('startAnimation').remove();
+
+}, 5500);
+
 var __adKernelBanner = {
 
     initGallery: function(slides, parent) {
