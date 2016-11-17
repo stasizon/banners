@@ -126,13 +126,13 @@ function calculateTransform() {
 
 function checkCurrentSlide() {
 
-    if (getSliderOffset() > breakPoints[0]) {
+    if (getSliderOffset() >= breakPoints[0]) {
         setSlide(0, true);
     }
 
     for (var y = 0; y < slider.children.length; y++) {
 
-        if (getSliderOffset() < breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
+        if (getSliderOffset() <= breakPoints[y] && getSliderOffset() > breakPoints[y + 1]) {
 
             for (let z = 0; z < document.getElementById('controlerContainer').children.length; z++) {
                 document.getElementById('controlerContainer').children[z].classList.remove('controller__item--active');
@@ -146,7 +146,7 @@ function checkCurrentSlide() {
 
     }
 
-    if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
+    if (getSliderOffset() <= breakPoints[breakPoints.length - 1]) {
 
         for (let z = 0; z < document.getElementById('controlerContainer').children.length; z++) {
             document.getElementById('controlerContainer').children[z].classList.remove('controller__item--active');
@@ -183,7 +183,7 @@ function getCurrentSlide() {
 
     if (getSliderOffset() < breakPoints[breakPoints.length - 1]) {
 
-        lastClickPosition = -90 - (375 * (breakPoints[breakPoints.length - 1] - 1));
+        lastClickPosition = -90 - (375 * (breakPoints.length - 2));
 
         return slider.children.length - 1;
 
@@ -288,7 +288,7 @@ function mouseUp(e) {
 function mouseLeave(e) {
 
     // clearInterval(timer);
-    // checkCurrentSlide();
+    checkCurrentSlide();
 
     document.getElementById('gallery').removeEventListener('mousemove', mouseMove);
 
