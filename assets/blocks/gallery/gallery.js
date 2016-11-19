@@ -296,7 +296,9 @@ function mouseUp(e) {
 
 function mouseLeave(e) {
 
-    checkCurrentSlide();
+    if (e.which === 1) {
+        checkCurrentSlide();
+    }
 
     document.getElementById('gallery').removeEventListener('mousemove', mouseMove);
 
