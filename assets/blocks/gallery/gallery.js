@@ -296,7 +296,6 @@ function mouseUp(e) {
 
 function mouseLeave(e) {
 
-    // clearInterval(timer);
     checkCurrentSlide();
 
     document.getElementById('gallery').removeEventListener('mousemove', mouseMove);
