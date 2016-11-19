@@ -216,16 +216,26 @@ function setSlide(slideId, enableScroll) {
 
         let positionOnMouseOut = getSliderOffset();
 
+        let slidesDifference = (getCurrentSlide() - slideId) * 2;
+
+        if (slidesDifference < 0) {
+            slidesDifference = -slidesDifference;
+        }
+
+        if (slidesDifference === 0) {
+            slidesDifference++;
+        }
+
         timer = setInterval(function () {
 
-            let offset = Math.round((positionOnMouseOut - (breakPoints[slideId] - 75)) / 2);
+            let offset = Math.round((positionOnMouseOut - (breakPoints[slideId] - 75)) / (slidesDifference));
 
             if (offset > 0) {
                 i++;
-                setOffset( getSliderOffset() - 2 );
+                setOffset( getSliderOffset() - slidesDifference );
             } else if(offset < 0) {
                 i--;
-                setOffset( getSliderOffset() + 2 );
+                setOffset( getSliderOffset() + slidesDifference );
             }
 
             if (i === offset) {
@@ -259,7 +269,6 @@ function mouseDown(e) {
     firstClickPosition = e.clientX - lastClickPosition;
 
     clearInterval(timer);
-    // checkCurrentSlide();
 
     setSlide(getCurrentSlide());
 
