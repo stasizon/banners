@@ -1,6 +1,7 @@
 var star = document.createElement('i');
     star.classList.add('material-icons');
     star.style.color = '#694E00';
+    star.style.fontSize = '19px';
     star.innerHTML = 'star';
 
 var allRates = document.getElementsByClassName('rate');
