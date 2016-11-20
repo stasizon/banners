@@ -289,7 +289,6 @@ function mouseMove(e) {
 function mouseUp(e) {
 
     checkCurrentSlide();
-
     document.getElementById('gallery').removeEventListener('mousemove', mouseMove);
 
 }
@@ -304,6 +303,32 @@ function mouseLeave(e) {
 
 }
 
+// TOUCH SUPPORT
+
+function touchStart(e) {
+
+    firstClickPosition = e.touches[0].clientX - lastClickPosition;
+    clearInterval(timer);
+    setSlide(getCurrentSlide());
+
+    return false;
+
+}
+
+function touchMove(e) {
+
+    var offset = Math.ceil((e.touches[0].clientX - firstClickPosition) / 2.5);
+
+    setOffset(offset);
+
+}
+
+function touchEnd(e) {
+
+    checkCurrentSlide();
+
+}
+
 setSlide(3, false);
 checkCurrentSlide();
 
@@ -311,7 +336,6 @@ document.getElementById('gallery').addEventListener('mousedown', mouseDown);
 document.getElementById('gallery').addEventListener('mouseup', mouseUp);
 document.getElementById('banner').addEventListener('mouseleave', mouseLeave);
 
-// document.getElementById('gallery').addEventListener('touchstart', mousedown);
-// document.getElementById('gallery').addEventListener('touchend', toFixedPosition);
-// document.getElementById('gallery').addEventListener('touchmove', touchmove);
-// document.getElementById('gallery').addEventListener('touchstart', touchstart);
+document.getElementById('gallery').addEventListener('touchstart', touchStart);
+document.getElementById('gallery').addEventListener('touchend', touchEnd);
+document.getElementById('gallery').addEventListener('touchmove', touchMove);
