@@ -29,7 +29,7 @@ var imageArray = [
                   './img/unsplash-6.jpg'
                  ];
 
-__adKernelBanner.initAnimation(['./img/unsplash.jpg', './img/unsplash-2.jpg', './img/unsplash-3.jpg']);
+// __adKernelBanner.initAnimation(['./img/unsplash.jpg', './img/unsplash-2.jpg', './img/unsplash-3.jpg']);
 
 __adKernelBanner.initGallery(imageArray, document.getElementById('slider'));
 

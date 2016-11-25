@@ -63,6 +63,10 @@ var lastClickPosition = 0;
 
 function calculateTransform() {
 
+    var origin = Math.round(-(getSliderOffset() - 115));
+
+    slider.style.perspectiveOrigin = origin + 125 + 'px';
+
     var calculateDistance = function(slideNumber) {
 
         return slider.children[slideNumber].offsetParent.offsetLeft + ((slideWidth - 100) * slideNumber) - 115;
@@ -118,6 +122,8 @@ function calculateTransform() {
         'translateZ(' + scaleSlide(calculateDistance(i)) + 'px)';
 
         slider.children[i].style.zIndex = calculateSlideLayer(calculateDistance(i));
+
+        slider.style.perspectiveOrigin = getSliderOffset() / slider
 
     }
 
