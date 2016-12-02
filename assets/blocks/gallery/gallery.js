@@ -1,7 +1,10 @@
 var IMG_WIDTH = 250;
 var IMG_HEIGHT = 160;
+var IMG_MARGIN = 100;
 
 var SLIDER_WIDTH = 1000;
+var SLIDER_OFFSET_TO_0 = 115;
+var BANNER_WIDTH = 480;
 
 var slider = parent;
 
@@ -71,12 +74,12 @@ function render() {
 
     slider.style.left = state.offset + 'px';
 
-    var origin = Math.round(-(state.offset) + 225);
+    var origin = Math.round(-(state.offset) + BANNER_WIDTH / 2);
 
-    slider.style.perspectiveOrigin = origin + 10 + 'px';
+    slider.style.perspectiveOrigin = origin + 'px';
 
     var calculateDistance = function(slideNumber) {
-        return slider.children[slideNumber].offsetParent.offsetLeft + ((IMG_WIDTH - 100) * slideNumber) - 115;
+        return slider.children[slideNumber].offsetParent.offsetLeft + ((IMG_WIDTH - IMG_MARGIN) * slideNumber) - SLIDER_OFFSET_TO_0;
     }
 
     function rotateSlide(distance) {
@@ -109,15 +112,11 @@ function render() {
 
     function calculateSlideLayer(distance) {
 
-        var depth = 400;
-
-        var zIndex = -distance + depth / 2;
-
-        if (zIndex > depth / 2) {
-            return depth - zIndex;
+        if (-distance > 0) {
+            return distance;
         }
 
-        return zIndex;
+        return -distance;
 
     }
 
@@ -175,7 +174,9 @@ function setSlide(slideId, enableScroll) {
 
         var positionOnMouseOut = state.offset;
 
-        var slidesDifference = (state.currentSlide - slideId);
+        var scrollSpeed = 5;
+
+        var slidesDifference = (state.currentSlide - slideId) * scrollSpeed;
 
         if (slidesDifference < 0) {
             slidesDifference = -slidesDifference;
@@ -187,7 +188,9 @@ function setSlide(slideId, enableScroll) {
 
         timer = setInterval(function () {
 
-            var offset = Math.round((positionOnMouseOut - (breakPoints[slideId] - 75)) / slidesDifference);
+            var time1 = Date.now();
+
+            var offset = Math.round((positionOnMouseOut - (breakPoints[slideId] - 75)) / (slidesDifference));
 
             if (offset > 0) {
                 i++;
@@ -201,7 +204,10 @@ function setSlide(slideId, enableScroll) {
                 clearInterval(timer);
             }
 
+            scrollSpeed = 1;
+
         }, 16);
+
 
     } else {
         setOffset( (breakPoints[slideId] - 75) - state.offset );
@@ -276,7 +282,7 @@ function touchEnd(e) {
 
 }
 
-setSlide(3, false);
+setSlide(Math.floor(slider.children.length / 2), false);
 
 document.getElementById('gallery').addEventListener('mousedown', mouseDown);
 document.getElementById('gallery').addEventListener('mouseup', mouseUp);
