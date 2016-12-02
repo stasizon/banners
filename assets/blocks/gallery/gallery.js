@@ -164,6 +164,8 @@ function setOffset(offsetDifference) {
 var timer;
 var globalScroll;
 
+var scrollSpeed = 5;
+
 function setSlide(slideId, enableScroll) {
 
     if (enableScroll) {
@@ -174,7 +176,7 @@ function setSlide(slideId, enableScroll) {
 
         var positionOnMouseOut = state.offset;
 
-        var scrollSpeed = 5;
+        console.log(scrollSpeed);
 
         var slidesDifference = (state.currentSlide - slideId) * scrollSpeed;
 
@@ -204,7 +206,7 @@ function setSlide(slideId, enableScroll) {
                 clearInterval(timer);
             }
 
-            scrollSpeed = 1;
+            scrollSpeed = Date.now() - time1;
 
         }, 16);
 
