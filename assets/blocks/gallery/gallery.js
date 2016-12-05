@@ -174,11 +174,7 @@ function setSlide(slideId, enableScroll) {
 
         var i = 0;
 
-        var positionOnMouseOut = state.offset;
-
-        console.log(scrollSpeed);
-
-        var slidesDifference = (state.currentSlide - slideId) * scrollSpeed;
+        var slidesDifference = (state.currentSlide - slideId);
 
         if (slidesDifference < 0) {
             slidesDifference = -slidesDifference;
@@ -190,19 +186,33 @@ function setSlide(slideId, enableScroll) {
 
         timer = setInterval(function () {
 
-            var time1 = Date.now();
+            var offset = Math.round((state.offset - (breakPoints[slideId] - 75)) / (slidesDifference));
 
-            var offset = Math.round((positionOnMouseOut - (breakPoints[slideId] - 75)) / (slidesDifference));
+            var time1 = Date.now();
 
             if (offset > 0) {
                 i++;
-                setOffset( -slidesDifference );
+                setOffset( -slidesDifference * scrollSpeed );
+
+                // if (offset > -slidesDifference * scrollSpeed) {
+                //     setOffset( offset );
+                //     console.log('work');
+                // }
+
             } else if(offset < 0) {
                 i--;
-                setOffset( slidesDifference );
+                setOffset( slidesDifference * scrollSpeed );
+
+                console.log(-offset, slidesDifference * scrollSpeed);
+
+                if (-offset < slidesDifference * scrollSpeed) {
+                    console.log('www');
+                    setOffset( offset );
+                    // clearInterval(timer);
+                }
             }
 
-            if (i === offset) {
+            if (offset === 0) {
                 clearInterval(timer);
             }
 
