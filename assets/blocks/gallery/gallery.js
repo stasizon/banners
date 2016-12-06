@@ -188,15 +188,11 @@ function setSlide(slideId, enableScroll) {
 
             var offset = Math.round((state.offset - (breakPoints[slideId] - 75)));
 
-            console.log(Math.round(state.offset - (breakPoints[slideId] - 75)));
-
             var time1 = Date.now();
 
             if (offset > 0) {
                 i++;
                 setOffset( -slidesDifference * scrollSpeed );
-
-                // console.log(-offset, -slidesDifference * scrollSpeed, ((slidesDifference * scrollSpeed) - offset));
 
                 if (-offset > -slidesDifference * scrollSpeed) {
                     clearInterval(timer);
@@ -206,8 +202,6 @@ function setSlide(slideId, enableScroll) {
             } else if(offset < 0) {
                 i--;
                 setOffset( slidesDifference * scrollSpeed );
-
-                // console.log(-offset, -slidesDifference * scrollSpeed, -((slidesDifference * scrollSpeed) + offset));
 
                 if (-offset < slidesDifference * scrollSpeed) {
                     clearInterval(timer);
