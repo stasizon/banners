@@ -102,3 +102,5 @@ gulp.task('watch', function() {
 gulp.task('build', gulp.series('clean', 'html', 'styles', 'js', 'img', 'assets'));
 
 gulp.task('dev', gulp.series('build', gulp.parallel(['watch', 'serve'])));
+
+gulp.task('default', gulp.series('dev'));

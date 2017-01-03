@@ -1,11 +1,4 @@
 var __adKernelBanner = {
-
-    initGallery: function(slides, parent) {
-
-        //=require blocks/gallery/gallery.js
-
-    },
-
     setRate: function() {
 
         //=require blocks/rate/rate.js
@@ -17,8 +10,9 @@ var __adKernelBanner = {
         //=require blocks/animation/animation.js
 
     }
-
 };
+
+//=require blocks/gallery/gallery.js
 
 var imageArray = [
                   './img/unsplash.jpg',
@@ -31,6 +25,6 @@ var imageArray = [
 
 // __adKernelBanner.initAnimation(['./img/unsplash.jpg', './img/unsplash-2.jpg', './img/unsplash-3.jpg']);
 
-__adKernelBanner.initGallery(imageArray, document.getElementById('slider'));
+__adKernelBanner.gallery.init(imageArray, document.getElementById('slider'));
 
 __adKernelBanner.setRate();

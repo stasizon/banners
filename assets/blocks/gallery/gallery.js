@@ -2,27 +2,40 @@ var IMG_WIDTH = 250;
 var IMG_HEIGHT = 160;
 var IMG_MARGIN = 100;
 
-var SLIDER_WIDTH = 1000;
 var SLIDER_OFFSET_TO_0 = 115;
 var BANNER_WIDTH = 480;
 
+var SLIDE_SPEED = 0.15;
+var SLIDE_SPEED_DEPEND = 0.001;
+
 var slider = parent;
+var timer;
 
-(function addSlides() {
+__adKernelBanner.gallery = {
+    _slides: null,
+    _container: null,
 
-    for (var i = 0; i < slides.length; i++) {
+    init: function (slides, container) {
+        this._slides = slides;
+        this._container = container;
 
-        var slide = document.createElement('div');
+        for (var i = 0; i < slides.length; i++) {
 
-        slide.classList.add('gallery__item');
-        slide.style.background = 'url(' + slides[i] + ') no-repeat center / cover';
-        slide.style.minWidth = IMG_WIDTH + 'px';
-        slide.style.height = IMG_HEIGHT + 'px';
+            var slide = document.createElement('div');
 
-        slider.appendChild(slide);
+            slide.classList.add('gallery__item');
+            slide.style.background = 'url(' + slides[i] + ') no-repeat center / cover';
+            slide.style.minWidth = IMG_WIDTH + 'px';
+            slide.style.height = IMG_HEIGHT + 'px';
+
+            slider.appendChild(slide);
+        }
+    },
+
+    getOffset: function (slideId) {
+        return (BANNER_WIDTH - IMG_WIDTH) / 2 + slideId * (IMG_MARGIN - IMG_WIDTH);
     }
-
-})();
+};
 
 function getBreakPoints() {
 
@@ -52,7 +65,7 @@ var breakPoints = getBreakPoints();
 
             setSlide(slideNumber, true);
 
-        }
+        };
 
         document.getElementById('controlerContainer').appendChild(controller);
 
@@ -64,14 +77,21 @@ var breakPoints = getBreakPoints();
 
 var state = {
     offset: 0,
-    currentSlide: 0
+    currentSlide: 0,
+    timer: 0
 };
+
+function setState(changes) {
+    for (var field in changes) {
+        state[field] = changes[field];
+    }
+    render();
+}
 
 var firstClickPosition = 0;
 var lastClickPosition = 0;
 
 function render() {
-
     slider.style.left = state.offset + 'px';
 
     var origin = Math.round(-(state.offset) + BANNER_WIDTH / 2);
@@ -80,7 +100,7 @@ function render() {
 
     var calculateDistance = function(slideNumber) {
         return slider.children[slideNumber].offsetParent.offsetLeft + ((IMG_WIDTH - IMG_MARGIN) * slideNumber) - SLIDER_OFFSET_TO_0;
-    }
+    };
 
     function rotateSlide(distance) {
 
@@ -152,84 +172,51 @@ function render() {
 
     })();
 
-}
-
-function setOffset(offsetDifference) {
-
-    state.offset += offsetDifference;
-    render();
-
-}
-
-var timer;
-var globalScroll;
-
-var scrollSpeed = 5;
-
-function setSlide(slideId, enableScroll) {
-
-    if (enableScroll) {
-
-        clearInterval(timer);
-
-        var i = 0;
-
-        var slidesDifference = (state.currentSlide - slideId);
-
-        if (slidesDifference < 0) {
-            slidesDifference = -slidesDifference;
-        }
-
-        if (slidesDifference === 0) {
-            slidesDifference++;
-        }
-
-        timer = setInterval(function () {
-
-            var offset = Math.round((state.offset - (breakPoints[slideId] - 75)));
-
-            var time1 = Date.now();
-
-            if (offset > 0) {
-                i++;
-                setOffset( -slidesDifference * scrollSpeed );
-
-                if (-offset > -slidesDifference * scrollSpeed) {
-                    clearInterval(timer);
-                    setOffset( ((slidesDifference * scrollSpeed) - offset) );
-                }
-
-            } else if(offset < 0) {
-                i--;
-                setOffset( slidesDifference * scrollSpeed );
-
-                if (-offset < slidesDifference * scrollSpeed) {
-                    clearInterval(timer);
-                    setOffset( -((slidesDifference * scrollSpeed) + offset ));
-                }
-            }
-
-            if (offset === 0) {
-                clearInterval(timer);
-            }
-
-            scrollSpeed = Math.ceil((Date.now() - time1) / 1.5);
-
-        }, 16);
-
-
-    } else {
-        setOffset( (breakPoints[slideId] - 75) - state.offset );
-    }
-
-    state.currentSlide = slideId;
-
-    for (let z = 0; z < document.getElementById('controlerContainer').children.length; z++) {
+    for (var z = 0; z < document.getElementById('controlerContainer').children.length; z++) {
         document.getElementById('controlerContainer').children[z].classList.remove('controller__item--active');
     }
 
-    document.getElementById('controlerContainer').children[slideId].classList.add('controller__item--active')
+    document.getElementById('controlerContainer').children[state.currentSlide].classList.add('controller__item--active')
+}
 
+function setSlide(slideId, enableScroll) {
+    var oldTime = Date.now();
+    var offset = getOffset(slideId);
+    var speed = SLIDE_SPEED + (Math.abs(state.offset - offset) * SLIDE_SPEED_DEPEND);
+
+    clearInterval(timer);
+
+    if (!enableScroll) {
+        setState({
+            offset: offset,
+            currentSlide: slideId
+        });
+        return;
+    }
+    
+    timer = setInterval(function () {
+        var currentTime = Date.now();
+        var side = 1;
+
+        if (offset < state.offset) {
+            side = -1;
+        }
+
+        var delta = Math.round((currentTime - oldTime) * speed * side);
+        var currentOffset = state.offset + delta;
+
+        if ((offset - currentOffset) * side <= 0) {
+            currentOffset = offset;
+            state.currentSlide = slideId;
+            clearInterval(timer);
+        }
+        
+        oldTime = currentTime;
+
+        setState({
+            offset: currentOffset
+        });
+    }, 16);
 }
 
 var oldClientX;
@@ -245,21 +232,19 @@ function mouseDown(e) {
 }
 
 function mouseMove(e) {
-
     var mouseOffset = (e.clientX - oldClientX) / 2.5;
 
     oldClientX = e.clientX || e.touches[0].clientX;
 
-    setOffset(mouseOffset);
-
+    setState({
+        offset: state.offset + mouseOffset
+    });
 }
 
 function mouseUp(e) {
-
     setSlide(state.currentSlide, true);
 
     document.getElementById('gallery').removeEventListener('mousemove', mouseMove);
-
 }
 
 function mouseLeave(e) {
@@ -276,19 +261,17 @@ function mouseLeave(e) {
 // TOUCH SUPPORT
 
 function touchMove(e) {
-
     var mouseOffset = (e.touches[0].clientX - oldClientX) / 2.5;
 
     oldClientX = e.touches[0].clientX;
 
-    setOffset(mouseOffset);
-
+    setState({
+        offset: state.offset + mouseOffset
+    });
 }
 
 function touchEnd(e) {
-
     setSlide(state.currentSlide, true);
-
 }
 
 setSlide(Math.floor(slider.children.length / 2), false);
